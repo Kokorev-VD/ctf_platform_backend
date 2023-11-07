@@ -15,6 +15,12 @@ interface TeamService {
 
     fun addUserToTeam(code: String) : TeamResponse
 
+    fun cptAddUserToTeam(userId: Long, teamId: Long) : TeamResponse
+
+    fun cptDeleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
+
+    fun check(teamId:Long):Unit
+
     fun createTeam(request: TeamCreationRequest) : TeamResponse
 
     fun getMyCptTeams() : Set<CptTeamResponse>

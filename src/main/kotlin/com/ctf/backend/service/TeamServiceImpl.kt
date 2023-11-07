@@ -4,7 +4,9 @@ import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
 import com.ctf.backend.errors.AlreadyInTeamException
+import com.ctf.backend.errors.NotEnoughAccessRightsException
 import com.ctf.backend.errors.ResourceNotFoundException
+import com.ctf.backend.errors.UserNotInATeamException
 import com.ctf.backend.mappers.TeamMapper
 import com.ctf.backend.models.request.TeamCreationRequest
 import com.ctf.backend.models.response.CptTeamResponse
@@ -54,9 +56,41 @@ class TeamServiceImpl(
             getPrincipal()
         ) })
         team.members = newMembers
+        teamRepository.save(team)
         return mapper.entityToResponse(team)
     }
 
+    override fun cptAddUserToTeam(userId: Long, teamId: Long): TeamResponse {
+        check(teamId)
+        val team = teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException(teamId) }
+        if(team.members.contains(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })){
+            throw AlreadyInTeamException()
+        }
+        val newMembers = (team.members as MutableSet<User>)
+        newMembers.add(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })
+        team.members = newMembers
+        teamRepository.save(team)
+        return mapper.entityToResponse(team)
+    }
+
+    override fun cptDeleteUserFromTeam(userId: Long, teamId: Long): TeamResponse {
+        check(teamId)
+        val team = teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException(teamId) }
+        if(!team.members.contains(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })){
+            throw UserNotInATeamException(userId, teamId)
+        }
+        team.members = (team.members as MutableSet<User>).apply {
+            this.remove(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })
+        }
+        teamRepository.save(team)
+        return mapper.entityToResponse(team)
+    }
+
+    override fun check(teamId: Long) {
+        if(teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException(teamId) }.captain.userLoginParams.id != getPrincipal()){
+            throw NotEnoughAccessRightsException()
+        }
+    }
 
 
     override fun createTeam(request: TeamCreationRequest): TeamResponse {

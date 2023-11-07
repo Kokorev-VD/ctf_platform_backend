@@ -32,4 +32,11 @@ class TeamController(
     @PostMapping("/new")
     fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)
 
+    @PostMapping("/add/user/{userId}/team/{teamId}")
+    fun cptAddUserToTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptAddUserToTeam(userId, teamId)
+
+    @DeleteMapping("/delete/user/{userId}/team/{teamId}")
+    fun cptDeleteUserFromTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptDeleteUserFromTeam(userId, teamId)
+
+
 }
