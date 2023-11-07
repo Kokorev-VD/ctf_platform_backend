@@ -47,6 +47,6 @@ class AuthServiceImpl(
         if (!encoder.matches(request.password, user.hash)){
             throw ApiError(HttpStatus.UNAUTHORIZED, "Неправильный пароль")
         }
-        return LoginResponse(jwtHelper.generateAccessToken(user))
+        return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user))
     }
 }

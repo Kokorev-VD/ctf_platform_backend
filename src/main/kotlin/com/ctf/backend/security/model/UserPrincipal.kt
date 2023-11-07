@@ -13,5 +13,4 @@ class UserPrincipal(
 
     override fun getPrincipal() = userId
 
-    override fun getAuthorities() = authorities
 }

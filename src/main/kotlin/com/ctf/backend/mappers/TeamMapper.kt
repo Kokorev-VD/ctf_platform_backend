@@ -22,6 +22,7 @@ class TeamMapper {
             preview = entity.preview,
             captainId = entity.captain.userLoginParams.id,
             members = members,
+            id = entity.id.toString()
         )
     }
 
@@ -39,6 +40,7 @@ class TeamMapper {
             code = entity.code,
             captainId = entity.captain.userLoginParams.id,
             members = members,
+            id = entity.id.toString()
         )
     }
 

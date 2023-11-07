@@ -4,6 +4,7 @@ import com.ctf.backend.models.request.LoginRequest
 import com.ctf.backend.models.request.RegistrationRequest
 import com.ctf.backend.models.response.LoginResponse
 import com.ctf.backend.models.response.UserRegistrationResponse
+import com.ctf.backend.models.response.UserResponse
 import com.ctf.backend.service.auth.AuthService
 import com.ctf.backend.util.API_PUBLIC
 import jakarta.validation.Valid
@@ -24,7 +25,7 @@ class AuthController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): LoginResponse{
+    fun login(@RequestBody request: LoginRequest): LoginResponse {
         return service.login(request)
     }
 }

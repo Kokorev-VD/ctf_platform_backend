@@ -16,8 +16,6 @@ class UserLoginParamsMapper {
 
     fun asRegistrationResponse(entity: UserLoginParams): UserRegistrationResponse {
         return UserRegistrationResponse(
-            id = entity.id,
-            email = entity.email,
         )
     }
 }
