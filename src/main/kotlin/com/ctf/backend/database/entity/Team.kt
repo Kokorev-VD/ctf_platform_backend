@@ -1,0 +1,41 @@
+package com.ctf.backend.database.entity
+
+import com.ctf.backend.database.entity.common.AbstractCreatedAtEntity
+import jakarta.persistence.*
+
+
+@Entity
+@Table(name = "TeamTable")
+class Team(
+
+    @Column(name = "rating", nullable = false)
+    var rating: Long = 0,
+
+    @Column(name = "title", nullable = false)
+    var title: String,
+
+    @Column(name = "info", nullable = false)
+    var info: String = "default",
+
+    @Column(name = "contacts", nullable = false)
+    var contacts: String = "default",
+
+    @Column(name = "preview", nullable = false)
+    var preview: String = "default",
+
+    @Column(name = "code", unique = true, nullable = false)
+    var code: String
+) : AbstractCreatedAtEntity() {
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "captainId")
+    lateinit var captain: User
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserToTeamTable",
+        joinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
+        )
+    var members: Set<User> = HashSet<User>()
+
+}
