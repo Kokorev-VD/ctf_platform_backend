@@ -112,4 +112,12 @@ class TeamServiceImpl(
         }
         return res
     }
+
+    override fun getAllTeams(): Set<TeamResponse> {
+        val res = mutableSetOf<TeamResponse>()
+        for(team in teamRepository.findAll()){
+            res.add(mapper.entityToResponse(team))
+        }
+        return res
+    }
 }

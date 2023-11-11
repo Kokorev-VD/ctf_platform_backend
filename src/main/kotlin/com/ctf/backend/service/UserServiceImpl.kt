@@ -25,5 +25,13 @@ class  UserServiceImpl(
         return userRepository.save(user)
     }
 
+    override fun getAllUsers(): Set<UserResponse> {
+        val res = mutableSetOf<UserResponse>()
+        for(user in userRepository.findAll()){
+            res.add(userMapper.asUserResponse(user))
+        }
+        return res
+    }
+
 
 }

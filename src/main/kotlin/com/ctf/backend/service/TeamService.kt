@@ -25,5 +25,5 @@ interface TeamService {
 
     fun getMyCptTeams() : Set<CptTeamResponse>
 
-
+    fun getAllTeams() : Set<TeamResponse>
 }

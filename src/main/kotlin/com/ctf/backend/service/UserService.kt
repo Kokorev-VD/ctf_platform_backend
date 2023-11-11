@@ -11,4 +11,5 @@ interface UserService {
 
     fun createUser(user: User) : User
 
+    fun getAllUsers() : Set<UserResponse>
 }

@@ -17,6 +17,9 @@ class TeamController(
     @GetMapping("/cpt/{cptId}")
     fun getTeamsByCptId(@PathVariable("cptId") cptId: Long): Set<TeamResponse> = teamService.getTeamsByCptId(cptId)
 
+    @GetMapping("/all")
+    fun getAllTeams() = teamService.getAllTeams()
+
     @GetMapping("/{id}")
     fun getTeamById(@PathVariable("id") id: Long) = teamService.getTeamById(id)
 

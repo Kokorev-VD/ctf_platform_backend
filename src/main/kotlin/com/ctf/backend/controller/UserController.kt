@@ -18,4 +18,7 @@ class UserController(
 
     @GetMapping("/me")
     fun getMyProfile() = userService.getMyProfile()
+
+    @GetMapping("/all")
+    fun getAllUsers() = userService.getAllUsers()
 }
