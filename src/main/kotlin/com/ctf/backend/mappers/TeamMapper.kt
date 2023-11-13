@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component
 class TeamMapper {
 
     fun entityToResponse(entity: Team) : TeamResponse{
-        val members = mutableSetOf<Long>()
+        val members = mutableSetOf<String>()
         for(member in entity.members) {
-            members.add(member.userLoginParams.id)
+            members.add(member.userLoginParams.id.toString())
         }
         return TeamResponse(
             rating = entity.rating,
@@ -20,16 +20,16 @@ class TeamMapper {
             info = entity.info,
             contacts = entity.contacts,
             preview = entity.preview,
-            captainId = entity.captain.userLoginParams.id,
+            captainId = entity.captain.userLoginParams.id.toString(),
             members = members,
             id = entity.id.toString()
         )
     }
 
     fun entityToCptResponse(entity: Team) : CptTeamResponse{
-        val members = mutableSetOf<Long>()
+        val members = mutableSetOf<String>()
         for(member in entity.members) {
-            members.add(member.userLoginParams.id)
+            members.add(member.userLoginParams.id.toString())
         }
         return CptTeamResponse(
             rating = entity.rating,
@@ -38,7 +38,7 @@ class TeamMapper {
             contacts = entity.contacts,
             preview = entity.preview,
             code = entity.code,
-            captainId = entity.captain.userLoginParams.id,
+            captainId = entity.captain.userLoginParams.id.toString(),
             members = members,
             id = entity.id.toString()
         )

@@ -13,7 +13,7 @@ interface TeamService {
 
     fun getTeamsByMemberId(memberId: Long) : Set<TeamResponse>
 
-    fun addUserToTeam(code: String) : TeamResponse
+    fun addUserToTeam(teamId: String, code: String) : TeamResponse
 
     fun cptAddUserToTeam(userId: Long, teamId: Long) : TeamResponse
 

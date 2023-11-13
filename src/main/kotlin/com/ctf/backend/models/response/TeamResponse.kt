@@ -7,6 +7,6 @@ data class TeamResponse(
     val info: String,
     val contacts: String,
     val preview: String,
-    val captainId: Long,
-    val members: Set<Long>,
+    val captainId: String,
+    val members: Set<String>,
 )

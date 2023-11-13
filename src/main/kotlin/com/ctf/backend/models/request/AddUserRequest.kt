@@ -1,5 +1,6 @@
 package com.ctf.backend.models.request
 
 data class AddUserRequest(
-    val code: String
+    val teamId: String,
+    val code: String,
 )

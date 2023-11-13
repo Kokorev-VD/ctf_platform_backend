@@ -23,7 +23,8 @@ class UserMapper {
             email = entity.userLoginParams.email,
             cptTeams = cptTeams,
             teams = teams,
-            id = entity.userLoginParams.id.toString()
+            id = entity.userLoginParams.id.toString(),
+            isAdmin = entity.admin,
         )
     }
 }

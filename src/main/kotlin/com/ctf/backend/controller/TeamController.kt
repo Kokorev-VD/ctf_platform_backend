@@ -30,7 +30,7 @@ class TeamController(
     fun getMyCptTeams() = teamService.getMyCptTeams()
 
     @PostMapping("/add")
-    fun addUserToTeam(@RequestBody addUserRequest: AddUserRequest) = teamService.addUserToTeam(addUserRequest.code)
+    fun addUserToTeam(@RequestBody addUserRequest: AddUserRequest) = teamService.addUserToTeam(code = addUserRequest.code, teamId = addUserRequest.teamId)
 
     @PostMapping("/new")
     fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)

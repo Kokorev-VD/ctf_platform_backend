@@ -7,7 +7,7 @@ data class CptTeamResponse(
     val info: String,
     val contacts: String,
     val preview: String,
-    val captainId: Long,
+    val captainId: String,
     val code: String,
-    val members: Set<Long>,
+    val members: Set<String>,
 )

@@ -3,10 +3,7 @@ package com.ctf.backend.service
 import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
-import com.ctf.backend.errors.AlreadyInTeamException
-import com.ctf.backend.errors.NotEnoughAccessRightsException
-import com.ctf.backend.errors.ResourceNotFoundException
-import com.ctf.backend.errors.UserNotInATeamException
+import com.ctf.backend.errors.*
 import com.ctf.backend.mappers.TeamMapper
 import com.ctf.backend.models.request.TeamCreationRequest
 import com.ctf.backend.models.response.CptTeamResponse
@@ -44,8 +41,11 @@ class TeamServiceImpl(
         return res
     }
 
-    override fun addUserToTeam(code: String): TeamResponse {
-        val team = teamRepository.findTeamByCode(code).orElseThrow { ResourceNotFoundException(code) }
+    override fun addUserToTeam(teamId: String, code: String): TeamResponse {
+        val team = teamRepository.findTeamById(teamId.toLong()).orElseThrow { ResourceNotFoundException(teamId) }
+        if (team.code != code){
+            throw CorruptedTeamCodeException()
+        }
         if (userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow{ ResourceNotFoundException(
                 getPrincipal()
             ) } in team.members){
