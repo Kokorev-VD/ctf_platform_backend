@@ -8,5 +8,6 @@ interface UserDao : AppRepository<User> {
 
     fun findUserByUserLoginParamsId(userLoginParamsId: Long): Optional<User>
 
+    fun deleteByUserLoginParamsId(userLoginParamsId: Long)
 
 }

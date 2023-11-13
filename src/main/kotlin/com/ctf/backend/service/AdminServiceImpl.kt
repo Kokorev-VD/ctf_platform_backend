@@ -2,8 +2,10 @@ package com.ctf.backend.service
 
 import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
+import com.ctf.backend.database.entity.UserLoginParams
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
+import com.ctf.backend.database.repo.UserLoginParamsDao
 import com.ctf.backend.errors.*
 import com.ctf.backend.mappers.TeamMapper
 import com.ctf.backend.mappers.UserMapper
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service
 class AdminServiceImpl(
     private val teamRepository: TeamDao,
     private val userRepository: UserDao,
+    private val userLPRepository: UserLoginParamsDao,
     private val userMapper: UserMapper,
     private val teamMapper: TeamMapper,
 ) : AdminService{
@@ -76,7 +79,9 @@ class AdminServiceImpl(
 
     override fun deleteUser(userId: Long): UserDeleteResponse {
         check()
-        userRepository.deleteById(userId)
+        val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException(userId) }
+        userRepository.delete(user)
+        userLPRepository.deleteById(userId)
         return UserDeleteResponse(message = "Вы удалили пользователя $userId")
     }
 
@@ -87,11 +92,15 @@ class AdminServiceImpl(
 
     override fun updateUser(request: UserUpdateRequest, userId: Long): UserResponse {
         check()
-        val userLP = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) }.userLoginParams
-        deleteUser(userId)
-        return userMapper.asUserResponse(userRepository.save(userMapper.asEntity(request).apply {
-            this.userLoginParams = userLP
-        }))
+        val user : User = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) }
+        val newUser = userMapper.asEntity(request)
+        user.team = newUser.team
+        user.cptTeams = newUser.cptTeams
+        user.name = newUser.name
+        user.admin = newUser.admin
+        user.surname = newUser.surname
+        user.rating = newUser.rating
+        return userMapper.asUserResponse(userRepository.save(user))
     }
 
     override fun updateTeam(request: TeamUpdateRequest, teamId: Long): CptTeamResponse {

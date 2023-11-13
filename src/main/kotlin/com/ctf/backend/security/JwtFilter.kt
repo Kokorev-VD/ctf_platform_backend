@@ -37,7 +37,7 @@ class JwtFilter(
             SecurityContextHolder.getContext().authentication = jwtParser.createAuthToken(header)
             filterChain.doFilter(request, response)
         } catch (exception: ApiError) {
-            exceptionResolver.resolveException(request, response, exception)
+           exceptionResolver.resolveException(request, response, exception)
         }
     }
 

@@ -8,20 +8,20 @@ import jakarta.persistence.*
 class User(
 
     @Column(name = "name", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name = "surname", nullable = false)
-    val surname: String,
+    var surname: String,
 
     @Column(name = "admin", nullable = false)
-    val admin: Boolean = false,
+    var admin: Boolean = false,
 
     @Column(name = "rating", nullable = false)
     var rating: Long = 0,
 
 ) : AbstractCreatedAtEntity(){
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToOne(fetch = FetchType.LAZY)
     lateinit var userLoginParams: UserLoginParams
 
     @OneToMany(mappedBy = "captain")
