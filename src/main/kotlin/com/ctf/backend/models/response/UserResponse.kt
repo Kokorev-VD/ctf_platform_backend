@@ -6,7 +6,7 @@ data class UserResponse(
     val surname: String,
     val rating: Long,
     val email: String,
-    val isAdmin: Boolean,
-    val cptTeams: Set<Long>,
-    val teams: Set<Long>,
+    val admin: Boolean,
+    val cptTeams: Set<String>,
+    val teams: Set<String>,
 )

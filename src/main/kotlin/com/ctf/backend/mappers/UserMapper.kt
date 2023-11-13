@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component
 class UserMapper {
 
     fun asUserResponse(entity: User) : UserResponse {
-        val teams: MutableSet<Long> = mutableSetOf()
-        val cptTeams : MutableSet<Long> = mutableSetOf()
+        val teams: MutableSet<String> = mutableSetOf()
+        val cptTeams : MutableSet<String> = mutableSetOf()
         for(x in entity.team){
-            teams.add(x.id)
+            teams.add(x.id.toString())
         }
         for(x in entity.cptTeams){
-            cptTeams.add(x.id)
+            cptTeams.add(x.id.toString())
         }
         return UserResponse(
             name = entity.name,
@@ -24,7 +24,7 @@ class UserMapper {
             cptTeams = cptTeams,
             teams = teams,
             id = entity.userLoginParams.id.toString(),
-            isAdmin = entity.admin,
+            admin = entity.admin,
         )
     }
 }
