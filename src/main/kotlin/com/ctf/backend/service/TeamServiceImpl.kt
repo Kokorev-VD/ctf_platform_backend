@@ -6,7 +6,9 @@ import com.ctf.backend.database.repo.UserDao
 import com.ctf.backend.errors.*
 import com.ctf.backend.mappers.TeamMapper
 import com.ctf.backend.models.request.TeamCreationRequest
+import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.CptTeamResponse
+import com.ctf.backend.models.response.TeamDeleteResponse
 import com.ctf.backend.models.response.TeamResponse
 import com.ctf.backend.util.createCode
 import com.ctf.backend.util.getPrincipal
@@ -119,5 +121,15 @@ class TeamServiceImpl(
             res.add(mapper.entityToResponse(team))
         }
         return res
+    }
+
+    override fun deleteTeam(teamId: Long): TeamDeleteResponse {
+        check(teamId)
+        teamRepository.deleteById(teamId)
+        return TeamDeleteResponse(message = "Вы удалили команду $teamId")
+    }
+
+    override fun updateTeam(request: TeamUpdateRequest): TeamResponse {
+        TODO()
     }
 }

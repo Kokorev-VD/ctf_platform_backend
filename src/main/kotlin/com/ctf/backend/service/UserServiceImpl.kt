@@ -4,6 +4,8 @@ import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.UserDao
 import com.ctf.backend.errors.ResourceNotFoundException
 import com.ctf.backend.mappers.UserMapper
+import com.ctf.backend.models.request.UserUpdateRequest
+import com.ctf.backend.models.response.UserDeleteResponse
 import com.ctf.backend.models.response.UserResponse
 import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Service
@@ -31,6 +33,15 @@ class  UserServiceImpl(
             res.add(userMapper.asUserResponse(user))
         }
         return res
+    }
+
+    override fun deleteMyProfile(): UserDeleteResponse {
+        userRepository.deleteById(getPrincipal())
+        return UserDeleteResponse(message = "Вы удалили свой аккаунт")
+    }
+
+    override fun updateMyProfile(request: UserUpdateRequest): UserResponse {
+        TODO("Not yet implemented")
     }
 
 

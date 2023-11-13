@@ -2,7 +2,9 @@ package com.ctf.backend.service
 
 import com.ctf.backend.database.entity.Team
 import com.ctf.backend.models.request.TeamCreationRequest
+import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.CptTeamResponse
+import com.ctf.backend.models.response.TeamDeleteResponse
 import com.ctf.backend.models.response.TeamResponse
 
 interface TeamService {
@@ -26,4 +28,9 @@ interface TeamService {
     fun getMyCptTeams() : Set<CptTeamResponse>
 
     fun getAllTeams() : Set<TeamResponse>
+
+    fun deleteTeam(teamId: Long) : TeamDeleteResponse
+
+    fun updateTeam(request: TeamUpdateRequest) : TeamResponse
+
 }

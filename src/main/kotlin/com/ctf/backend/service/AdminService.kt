@@ -1,7 +1,9 @@
 package com.ctf.backend.service
 
-import com.ctf.backend.models.response.CptTeamResponse
-import com.ctf.backend.models.response.TeamResponse
+import com.ctf.backend.models.request.TeamCreationRequest
+import com.ctf.backend.models.request.TeamUpdateRequest
+import com.ctf.backend.models.request.UserUpdateRequest
+import com.ctf.backend.models.response.*
 
 interface AdminService {
 
@@ -12,4 +14,15 @@ interface AdminService {
     fun getTeam(teamId:Long) : CptTeamResponse
 
     fun check(): Unit
+
+    fun deleteTeam(teamId: Long) : TeamDeleteResponse
+
+    fun deleteUser(userId: Long) : UserDeleteResponse
+
+    fun createTeam(request:TeamCreationRequest, userId: Long): CptTeamResponse
+
+    fun updateUser(request:UserUpdateRequest, userId: Long) :  UserResponse
+
+    fun updateTeam(request: TeamUpdateRequest, teamId: Long) : CptTeamResponse
+
 }

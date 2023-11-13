@@ -1,11 +1,17 @@
 package com.ctf.backend.mappers
 
+import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
+import com.ctf.backend.database.repo.TeamDao
+import com.ctf.backend.errors.ResourceNotFoundException
+import com.ctf.backend.models.request.UserUpdateRequest
 import com.ctf.backend.models.response.UserResponse
 import org.springframework.stereotype.Component
 
 @Component
-class UserMapper {
+class UserMapper(
+    val teamRepository: TeamDao,
+) {
 
     fun asUserResponse(entity: User) : UserResponse {
         val teams: MutableSet<String> = mutableSetOf()
@@ -26,5 +32,24 @@ class UserMapper {
             id = entity.userLoginParams.id.toString(),
             admin = entity.admin,
         )
+    }
+
+    fun asEntity(request: UserUpdateRequest) : User{
+        val team = mutableSetOf<Team>()
+        val cptTeam = mutableSetOf<Team>()
+        for(t in request.teams){
+            team.add(teamRepository.findTeamById(t.toLong()).orElseThrow { ResourceNotFoundException(t) })
+        }
+        for(t in request.cptTeams){
+            cptTeam.add(teamRepository.findTeamById(t.toLong()).orElseThrow { ResourceNotFoundException(t) })
+        }
+        return User(
+            name = request.name,
+            surname = request.surname,
+            rating = request.rating,
+        ).apply {
+            this.team = team
+            this.cptTeams = cptTeam
+        }
     }
 }

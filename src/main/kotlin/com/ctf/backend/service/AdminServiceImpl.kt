@@ -1,16 +1,16 @@
 package com.ctf.backend.service
 
+import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
-import com.ctf.backend.errors.AlreadyInTeamException
-import com.ctf.backend.errors.NotEnoughAccessRightsException
-import com.ctf.backend.errors.ResourceNotFoundException
-import com.ctf.backend.errors.UserNotInATeamException
+import com.ctf.backend.errors.*
 import com.ctf.backend.mappers.TeamMapper
 import com.ctf.backend.mappers.UserMapper
-import com.ctf.backend.models.response.CptTeamResponse
-import com.ctf.backend.models.response.TeamResponse
+import com.ctf.backend.models.request.TeamCreationRequest
+import com.ctf.backend.models.request.TeamUpdateRequest
+import com.ctf.backend.models.request.UserUpdateRequest
+import com.ctf.backend.models.response.*
 import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Service
 
@@ -46,6 +46,10 @@ class AdminServiceImpl(
             this.remove(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })
         }
         teamRepository.save(team)
+        if (team.members.isEmpty()){
+            deleteTeam(team.id)
+            throw DeletedObjectResponse("team ${team.id}")
+        }
         return teamMapper.entityToResponse(team)
     }
 
@@ -63,4 +67,38 @@ class AdminServiceImpl(
             throw NotEnoughAccessRightsException()
         }
     }
+
+    override fun deleteTeam(teamId: Long): TeamDeleteResponse {
+        check()
+        teamRepository.deleteById(teamId)
+        return TeamDeleteResponse(message = "Вы удалили команду $teamId")
+    }
+
+    override fun deleteUser(userId: Long): UserDeleteResponse {
+        check()
+        userRepository.deleteById(userId)
+        return UserDeleteResponse(message = "Вы удалили пользователя $userId")
+    }
+
+    override fun createTeam(request: TeamCreationRequest, userId: Long): CptTeamResponse {
+        check()
+        return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply { captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException(userId) } }))
+    }
+
+    override fun updateUser(request: UserUpdateRequest, userId: Long): UserResponse {
+        check()
+        val userLP = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) }.userLoginParams
+        deleteUser(userId)
+        return userMapper.asUserResponse(userRepository.save(userMapper.asEntity(request).apply {
+            this.userLoginParams = userLP
+        }))
+    }
+
+    override fun updateTeam(request: TeamUpdateRequest, teamId: Long): CptTeamResponse {
+        check()
+        val team = teamMapper.updateRequestToEntity(request).apply { id = teamId }
+        teamRepository.deleteById(teamId)
+        return teamMapper.entityToCptResponse(teamRepository.save(team))
+    }
+
 }
