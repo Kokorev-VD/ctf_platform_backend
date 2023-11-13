@@ -13,6 +13,6 @@ class UserLoginParams (
     @Column(name = "hash", nullable = false)
     var hash: String? = null
 
-    @OneToOne(mappedBy = "userLoginParams", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "userLoginParams", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     lateinit var user: User
 }

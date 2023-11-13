@@ -82,4 +82,15 @@ class TeamMapper (
             this.members = members
         }
     }
+
+    fun updateEntity(team: Team, newTeam: Team): Team {
+        team.members =  newTeam.members
+        team.info = newTeam.info
+        team.captain = newTeam.captain
+        team.contacts = newTeam.contacts
+        team.preview = newTeam.preview
+        team.rating = newTeam.rating
+        team.title = newTeam.title
+        return team
+    }
 }

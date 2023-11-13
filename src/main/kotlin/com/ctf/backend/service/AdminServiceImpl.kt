@@ -73,6 +73,7 @@ class AdminServiceImpl(
 
     override fun deleteTeam(teamId: Long): TeamDeleteResponse {
         check()
+        teamRepository.findTeamById(teamId).orElseThrow{ResourceNotFoundException(teamId)}
         teamRepository.deleteById(teamId)
         return TeamDeleteResponse(message = "Вы удалили команду $teamId")
     }
@@ -87,27 +88,24 @@ class AdminServiceImpl(
 
     override fun createTeam(request: TeamCreationRequest, userId: Long): CptTeamResponse {
         check()
-        return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply { captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException(userId) } }))
+        return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply {
+            captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException(userId) }
+            this.members = setOf(captain)
+        }))
     }
 
     override fun updateUser(request: UserUpdateRequest, userId: Long): UserResponse {
         check()
         val user : User = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) }
         val newUser = userMapper.asEntity(request)
-        user.team = newUser.team
-        user.cptTeams = newUser.cptTeams
-        user.name = newUser.name
-        user.admin = newUser.admin
-        user.surname = newUser.surname
-        user.rating = newUser.rating
-        return userMapper.asUserResponse(userRepository.save(user))
+        return userMapper.asUserResponse(userRepository.save(userMapper.updateEntity(user, newUser)))
     }
 
     override fun updateTeam(request: TeamUpdateRequest, teamId: Long): CptTeamResponse {
         check()
-        val team = teamMapper.updateRequestToEntity(request).apply { id = teamId }
-        teamRepository.deleteById(teamId)
-        return teamMapper.entityToCptResponse(teamRepository.save(team))
+        val team = teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException(teamId) }
+        val newTeam = teamMapper.updateRequestToEntity(request)
+        return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.updateEntity(team, newTeam)))
     }
 
 }

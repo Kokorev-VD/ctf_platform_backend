@@ -38,6 +38,8 @@ class AuthServiceImpl(
         }
         val user = userService.createUser(User(request.name, request.surname))
         user.userLoginParams = userLP
+        user.id = userLP.id
+
         return mapper.asRegistrationResponse(userLP).apply { this.accessJwt = login(LoginRequest(request.email, request.password)).accessJwt }
     }
 

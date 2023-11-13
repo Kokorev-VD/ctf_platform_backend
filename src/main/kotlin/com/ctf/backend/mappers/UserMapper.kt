@@ -52,4 +52,17 @@ class UserMapper(
             this.cptTeams = cptTeam
         }
     }
+    fun updateEntity(user:User, newUser: User) : User{
+        user.team = newUser.team
+        user.cptTeams = newUser.cptTeams
+        for(t in user.cptTeams) {
+            t.captain = user
+            teamRepository.save(t)
+        }
+        user.name = newUser.name
+        user.admin = newUser.admin
+        user.surname = newUser.surname
+        user.rating = newUser.rating
+        return user
+    }
 }

@@ -19,7 +19,8 @@ class User(
     @Column(name = "rating", nullable = false)
     var rating: Long = 0,
 
-) : AbstractCreatedAtEntity(){
+) : AbstractCreatedAtEntity(
+){
 
     @OneToOne(fetch = FetchType.LAZY)
     lateinit var userLoginParams: UserLoginParams
@@ -28,11 +29,12 @@ class User(
     var cptTeams : Set<Team> = HashSet<Team>()
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(name = "UserToTeamTable",
         joinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],
     )
     var team : Set<Team> = HashSet<Team>()
 
+    override var id : Long = 0
 }
