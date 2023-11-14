@@ -29,7 +29,7 @@ class User(
     var cptTeams : Set<Team> = HashSet<Team>()
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserToTeamTable",
         joinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],

@@ -14,6 +14,7 @@ import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.request.UserUpdateRequest
 import com.ctf.backend.models.response.*
 import com.ctf.backend.util.getPrincipal
+import org.hibernate.ObjectDeletedException
 import org.springframework.stereotype.Service
 
 @Service
@@ -48,6 +49,9 @@ class AdminServiceImpl(
         team.members = (team.members as MutableSet<User>).apply {
             this.remove(userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException(userId) })
         }
+        if(team.captain.id == userId && team.members.isNotEmpty()){
+            team.captain = team.members.first()
+        }
         teamRepository.save(team)
         if (team.members.isEmpty()){
             deleteTeam(team.id)
@@ -81,6 +85,9 @@ class AdminServiceImpl(
     override fun deleteUser(userId: Long): UserDeleteResponse {
         check()
         val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException(userId) }
+        for(t in user.team){
+            deleteUserFromTeam(userId = user.id, teamId = t.id)
+        }
         userRepository.delete(user)
         userLPRepository.deleteById(userId)
         return UserDeleteResponse(message = "Вы удалили пользователя $userId")
@@ -105,6 +112,10 @@ class AdminServiceImpl(
         check()
         val team = teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException(teamId) }
         val newTeam = teamMapper.updateRequestToEntity(request)
+        if (newTeam.members.isEmpty()){
+            deleteTeam(teamId)
+            throw DeletedObjectResponse("team $teamId")
+        }
         return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.updateEntity(team, newTeam)))
     }
 
