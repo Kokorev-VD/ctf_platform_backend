@@ -7,7 +7,11 @@ import jakarta.persistence.*
 @Table(name = "UserLoginParamsTable")
 class UserLoginParams (
     @Column(name = "email", nullable = false, unique = true)
-    var email: String
+    var email: String,
+
+    @Column(name = "admin", nullable = false)
+    var admin: Boolean = false,
+
 ) : AbstractCreatedAtEntity(){
 
     @Column(name = "hash", nullable = false)

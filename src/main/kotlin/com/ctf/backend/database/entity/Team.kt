@@ -11,7 +11,7 @@ class Team(
     @Column(name = "rating", nullable = false)
     var rating: Long = 0,
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     var title: String,
 
     @Column(name = "info", nullable = false)

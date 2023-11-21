@@ -27,6 +27,8 @@ interface TeamService {
 
     fun getMyCptTeams() : Set<CptTeamResponse>
 
+    fun getMyTeams() : Set<TeamResponse>
+
     fun getAllTeams() : Set<TeamResponse>
 
     fun deleteTeam(teamId: Long) : TeamDeleteResponse

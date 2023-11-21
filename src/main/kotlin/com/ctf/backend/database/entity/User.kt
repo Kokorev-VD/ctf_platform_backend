@@ -13,9 +13,6 @@ class User(
     @Column(name = "surname", nullable = false)
     var surname: String,
 
-    @Column(name = "admin", nullable = false)
-    var admin: Boolean = false,
-
     @Column(name = "rating", nullable = false)
     var rating: Long = 0,
 

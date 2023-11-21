@@ -26,19 +26,23 @@ class TeamController(
     @GetMapping("/member/{memberId}")
     fun getTeamsByMemberId(@PathVariable("memberId") memberId: Long) = teamService.getTeamsByMemberId(memberId)
 
-    @GetMapping("/my")
+    @GetMapping("/my/cpt")
     fun getMyCptTeams() = teamService.getMyCptTeams()
 
-    @PostMapping("/add")
+    @GetMapping("/my")
+    fun getMyTeams() = teamService.getMyTeams()
+
+
+    @PostMapping("/join")
     fun addUserToTeam(@RequestBody addUserRequest: AddUserRequest) = teamService.addUserToTeam(code = addUserRequest.code, teamId = addUserRequest.teamId)
 
-    @PostMapping("/new")
+    @PostMapping("")
     fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)
 
-    @PostMapping("/add/user/{userId}/team/{teamId}")
+    @PostMapping("/{teamId}/user/{userId}")
     fun cptAddUserToTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptAddUserToTeam(userId, teamId)
 
-    @DeleteMapping("/delete/user/{userId}/team/{teamId}")
+    @DeleteMapping("/{teamId}/user/{userId}")
     fun cptDeleteUserFromTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptDeleteUserFromTeam(userId, teamId)
 
 

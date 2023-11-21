@@ -97,7 +97,6 @@ class TeamServiceImpl(
 
     override fun createTeam(request: TeamCreationRequest): TeamResponse {
         val team = mapper.requestToEntity(request)
-        team.code = createCode()
         team.members = setOf<User>(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException(getPrincipal())})
         team.captain = userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow{ ResourceNotFoundException(
             getPrincipal()
@@ -113,6 +112,10 @@ class TeamServiceImpl(
             res.add(mapper.entityToCptResponse(team))
         }
         return res
+    }
+
+    override fun getMyTeams(): Set<TeamResponse> {
+        TODO("Not yet implemented")
     }
 
     override fun getAllTeams(): Set<TeamResponse> {

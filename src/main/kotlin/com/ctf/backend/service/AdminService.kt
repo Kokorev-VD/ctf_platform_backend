@@ -21,8 +21,8 @@ interface AdminService {
 
     fun createTeam(request:TeamCreationRequest, userId: Long): CptTeamResponse
 
-    fun updateUser(request:UserUpdateRequest, userId: Long) :  UserResponse
+    fun updateUser(request:UserUpdateRequest) :  UserResponse
 
-    fun updateTeam(request: TeamUpdateRequest, teamId: Long) : CptTeamResponse
+    fun updateTeam(request: TeamUpdateRequest) : CptTeamResponse
 
 }

@@ -3,6 +3,7 @@ package com.ctf.backend.mappers
 import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
+import com.ctf.backend.errors.CaptainNotInATeamException
 import com.ctf.backend.errors.ResourceNotFoundException
 import com.ctf.backend.models.request.UserUpdateRequest
 import com.ctf.backend.models.response.UserResponse
@@ -30,7 +31,7 @@ class UserMapper(
             cptTeams = cptTeams,
             teams = teams,
             id = entity.userLoginParams.id.toString(),
-            admin = entity.admin,
+            admin = entity.userLoginParams.admin,
         )
     }
 
@@ -48,11 +49,17 @@ class UserMapper(
             surname = request.surname,
             rating = request.rating,
         ).apply {
+            this.id = request.id.toLong()
             this.team = team
             this.cptTeams = cptTeam
         }
     }
     fun updateEntity(user:User, newUser: User) : User{
+        for (cptTeam in newUser.cptTeams){
+            if (!newUser.team.contains(cptTeam)){
+                throw CaptainNotInATeamException(newUser.id.toString(), cptTeam.id.toString())
+            }
+        }
         user.team = newUser.team
         user.cptTeams = newUser.cptTeams
         for(t in user.cptTeams) {
@@ -60,7 +67,6 @@ class UserMapper(
             teamRepository.save(t)
         }
         user.name = newUser.name
-        user.admin = newUser.admin
         user.surname = newUser.surname
         user.rating = newUser.rating
         return user

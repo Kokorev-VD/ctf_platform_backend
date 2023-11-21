@@ -39,7 +39,6 @@ class AuthServiceImpl(
         val user = userService.createUser(User(request.name, request.surname))
         user.userLoginParams = userLP
         user.id = userLP.id
-
         return mapper.asRegistrationResponse(userLP).apply { this.accessJwt = login(LoginRequest(request.email, request.password)).accessJwt }
     }
 
@@ -49,6 +48,6 @@ class AuthServiceImpl(
         if (!encoder.matches(request.password, user.hash)){
             throw ApiError(HttpStatus.UNAUTHORIZED, "Неправильный пароль")
         }
-        return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user))
+        return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user, user.admin))
     }
 }

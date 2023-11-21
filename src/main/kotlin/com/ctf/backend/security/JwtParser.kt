@@ -2,6 +2,7 @@ package com.ctf.backend.security
 
 import com.ctf.backend.errors.ApiError
 import com.ctf.backend.errors.CorruptedTokenException
+import com.ctf.backend.security.model.Authority
 import com.ctf.backend.security.model.UserPrincipal
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
@@ -10,11 +11,15 @@ import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import org.hibernate.validator.internal.util.annotation.AnnotationDescriptor
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
+import java.lang.module.ModuleDescriptor
 import java.util.*
 import javax.crypto.SecretKey
+import kotlin.collections.LinkedHashMap
 
 @Component
 class JwtParser(
@@ -54,12 +59,17 @@ class JwtParser(
         val token = tokenFromHeader.replace(headerPrefix, "")
         val claims = parseToken(token)
         val userId = claims.body.get("userId", Integer::class.java)?.toLong() ?: throw CorruptedTokenException()
-        return UserPrincipal(userId)
+        val rawAuthorities = claims.body.get("authorities", List::class.java)?.toList() ?: throw CorruptedTokenException()
+        val authorities = mutableListOf<GrantedAuthority>()
+        for (rawAuthority in rawAuthorities){
+            authorities.add(GrantedAuthority { (rawAuthority as LinkedHashMap<String, String>)["authority"] })
+        }
+        return UserPrincipal(userId, authorities as List<GrantedAuthority>)
     }
 
     fun createAuthToken(header: String): UserPrincipal {
         if (!header.startsWith(headerPrefix)) throw CorruptedTokenException()
         val principal = parseTokenPrincipalFromHeader(header)
-        return UserPrincipal(principal.userId)
+        return UserPrincipal(principal.userId, principal.authorities)
     }
 }

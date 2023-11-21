@@ -20,10 +20,10 @@ class AdminController(
     private val adminService: AdminService
 ) {
 
-    @PostMapping("/add/user/{userId}/team/{teamId}")
+    @PostMapping("/user/{userId}/team/{teamId}")
     fun addUserToTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = adminService.addUserToTeam(userId, teamId)
 
-    @DeleteMapping("/delete/user/{userId}/team/{teamId}")
+    @DeleteMapping("/user/{userId}/team/{teamId}")
     fun deleteUserFromTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = adminService.deleteUserFromTeam(userId, teamId)
 
     @GetMapping("/team/{teamId}")
@@ -35,13 +35,13 @@ class AdminController(
     @DeleteMapping("/user/{userId}")
     fun deleteUser(@PathVariable("userId") userId:Long) = adminService.deleteUser(userId)
 
-    @PostMapping("/team/create/cpt/{userId}")
+    @PostMapping("/cpt/{userId}")
     fun createTeam(@RequestBody request: TeamCreationRequest, @PathVariable("userId") userId: Long) = adminService.createTeam(request, userId)
 
-    @PutMapping("/user/update/{userId}")
-    fun updateUser(@RequestBody request: UserUpdateRequest, @PathVariable("userId") userId: Long) = adminService.updateUser(request, userId)
+    @PutMapping("/user")
+    fun updateUser(@RequestBody request: UserUpdateRequest) = adminService.updateUser(request)
 
-    @PutMapping("/team/update/{teamId}")
-    fun updateTeam(@RequestBody request: TeamUpdateRequest, @PathVariable("teamId") teamId: Long) = adminService.updateTeam(request, teamId)
+    @PutMapping("/team")
+    fun updateTeam(@RequestBody request: TeamUpdateRequest) = adminService.updateTeam(request)
 
 }

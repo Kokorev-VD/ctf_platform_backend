@@ -4,11 +4,13 @@ import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
+import com.ctf.backend.errors.AlreadyExistsException
 import com.ctf.backend.errors.ResourceNotFoundException
 import com.ctf.backend.models.request.TeamCreationRequest
 import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.CptTeamResponse
 import com.ctf.backend.models.response.TeamResponse
+import com.ctf.backend.util.createCode
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 
@@ -54,17 +56,27 @@ class TeamMapper (
     }
 
     fun requestToEntity(request: TeamCreationRequest) :  Team{
+        var code = createCode()
+        while (!teamRepository.findTeamByCode(code).isEmpty){
+            code = createCode()
+        }
+        if (!teamRepository.findTeamByTitle(request.title).isEmpty) {
+            throw AlreadyExistsException("team with title ${request.title}")
+        }
         return Team(
             rating = 0,
             title = request.title,
             info = request.info,
             contacts = request.contacts,
             preview = request.preview,
-            code = "0",
+            code = code,
         )
     }
 
     fun updateRequestToEntity(request: TeamUpdateRequest) : Team{
+        if (!teamRepository.findTeamByTitle(request.title).isEmpty) {
+            throw AlreadyExistsException("team with title ${request.title}")
+        }
         val members = mutableSetOf<User>()
         for (m in request.members){
             members.add(userRepository.findUserByUserLoginParamsId(m.toLong()).orElseThrow { ResourceNotFoundException(m) })

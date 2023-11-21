@@ -12,6 +12,8 @@ interface TeamDao: AppRepository<Team> {
 
     fun findTeamById(id: Long) : Optional<Team>
 
+    fun findTeamByTitle(title: String) : Optional<Team>
+
     @Query("select t from Team t join t.members u where u.id = :userId")
     fun findTeamsByUserId(@Param("userId") userId:Long) : Set<Team>
 

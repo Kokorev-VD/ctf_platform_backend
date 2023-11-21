@@ -4,6 +4,7 @@ import com.ctf.backend.database.entity.UserLoginParams
 import com.ctf.backend.security.JwtParser
 import com.ctf.backend.security.model.Authority
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -17,12 +18,15 @@ class JwtHelper(
     private val accessTokenLifeTime: Long,
 ) {
 
-    fun generateAccessToken(user: UserLoginParams): String {
-        val authorities = mutableListOf(Authority.USER)
+    fun generateAccessToken(user: UserLoginParams, admin: Boolean): String {
+        val authorities = mutableListOf(Authority.USER.authority)
+        if (admin){
+            authorities.add(Authority.ADMIN.authority)
+        }
         return jwt.createToken(
             "userId" to user.id,
             "permissions" to emptyList<String>(),
-            "authoroties" to authorities,
+            "authorities" to authorities,
             expiration = getAccessTokenExpiration()
         )
     }
