@@ -87,7 +87,6 @@ class TeamServiceImpl(
         teamRepository.save(team)
         return mapper.entityToResponse(team)
     }
-
     override fun check(teamId: Long) {
         if(teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException(teamId) }.captain.userLoginParams.id != getPrincipal()){
             throw NotEnoughAccessRightsException()

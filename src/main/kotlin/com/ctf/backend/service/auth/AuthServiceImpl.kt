@@ -45,9 +45,9 @@ class AuthServiceImpl(
     @Transactional
     override fun login(request: LoginRequest): LoginResponse {
         val user = dao.findByEmail(request.email).orElseThrow { ResourceNotFoundException(request.email) }
-        if (!encoder.matches(request.password, user.hash)){
+        if (!encoder.matches(request.password, user.hash)) {
             throw ApiError(HttpStatus.UNAUTHORIZED, "Неправильный пароль")
         }
-        return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user, user.admin))
+        return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user.id, user.admin))
     }
 }

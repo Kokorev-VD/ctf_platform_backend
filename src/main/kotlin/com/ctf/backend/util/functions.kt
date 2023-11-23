@@ -1,5 +1,7 @@
 package com.ctf.backend.util
 
+import com.ctf.backend.security.JwtParser
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 

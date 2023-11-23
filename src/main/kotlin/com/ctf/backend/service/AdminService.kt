@@ -13,8 +13,6 @@ interface AdminService {
 
     fun getTeam(teamId:Long) : CptTeamResponse
 
-    fun check(): Unit
-
     fun deleteTeam(teamId: Long) : TeamDeleteResponse
 
     fun deleteUser(userId: Long) : UserDeleteResponse
