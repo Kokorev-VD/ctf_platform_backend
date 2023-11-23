@@ -7,7 +7,7 @@ import com.ctf.backend.models.response.*
 
 interface AdminService {
 
-    fun addUserToTeam(userId: Long, teamId: Long) : TeamResponse
+    fun addUserToTeam(userId: Long, teamId: Long) : CptTeamResponse
 
     fun deleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
 

@@ -36,6 +36,6 @@ class Team(
         joinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
         )
-    var members: Set<User> = HashSet<User>()
+    var members: Set<User> = HashSet()
 
 }

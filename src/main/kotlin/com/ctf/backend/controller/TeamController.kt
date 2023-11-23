@@ -2,6 +2,7 @@ package com.ctf.backend.controller
 
 import com.ctf.backend.models.request.AddUserRequest
 import com.ctf.backend.models.request.TeamCreationRequest
+import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.TeamResponse
 import com.ctf.backend.service.TeamService
 import com.ctf.backend.util.API_VERSION_1
@@ -15,10 +16,7 @@ class TeamController(
 ) {
 
     @GetMapping("/cpt/{cptId}")
-    fun getTeamsByCptId(@PathVariable("cptId") cptId: Long): Set<TeamResponse> = teamService.getTeamsByCptId(cptId)
-
-    @GetMapping("/all")
-    fun getAllTeams() = teamService.getAllTeams()
+    fun getTeamsByCptId(@PathVariable("cptId") cptId: Long) = teamService.getTeamsByCptId(cptId)
 
     @GetMapping("/{id}")
     fun getTeamById(@PathVariable("id") id: Long) = teamService.getTeamById(id)
@@ -32,18 +30,25 @@ class TeamController(
     @GetMapping("/my")
     fun getMyTeams() = teamService.getMyTeams()
 
+    @GetMapping("/all")
+    fun getAllTeams() = teamService.getAllTeams()
 
-    @PostMapping("/join")
-    fun addUserToTeam(@RequestBody addUserRequest: AddUserRequest) = teamService.addUserToTeam(code = addUserRequest.code, teamId = addUserRequest.teamId)
+    @DeleteMapping("/{teamId}")
+    fun cptDeleteTeam(@PathVariable("teamId") teamId: Long) = teamService.cptDeleteTeam(teamId)
 
-    @PostMapping("")
-    fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)
+    @PutMapping("")
+    fun cptUpdateTeam(@RequestBody request: TeamUpdateRequest) = teamService.cptUpdateTeam(request)
+
+    @DeleteMapping("/{teamId}/user/{userId}")
+    fun cptDeleteUserFromTeam(@PathVariable("teamId") teamId: Long, @PathVariable("userId") userId: Long) = teamService.cptDeleteUserFromTeam(userId, teamId)
 
     @PostMapping("/{teamId}/user/{userId}")
     fun cptAddUserToTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptAddUserToTeam(userId, teamId)
 
-    @DeleteMapping("/{teamId}/user/{userId}")
-    fun cptDeleteUserFromTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = teamService.cptDeleteUserFromTeam(userId, teamId)
+    @PostMapping("/join")
+    fun joinTeam(@RequestBody addUserRequest: AddUserRequest) = teamService.joinTeam(code = addUserRequest.code, teamId = addUserRequest.teamId)
 
+    @PostMapping("")
+    fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)
 
 }

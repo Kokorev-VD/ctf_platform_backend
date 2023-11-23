@@ -23,7 +23,7 @@ class User(
     lateinit var userLoginParams: UserLoginParams
 
     @OneToMany(mappedBy = "captain")
-    var cptTeams : Set<Team> = HashSet<Team>()
+    var cptTeams : Set<Team> = HashSet()
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -31,7 +31,7 @@ class User(
         joinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],
     )
-    var team : Set<Team> = HashSet<Team>()
+    var team : Set<Team> = HashSet()
 
     override var id : Long = 0
 }

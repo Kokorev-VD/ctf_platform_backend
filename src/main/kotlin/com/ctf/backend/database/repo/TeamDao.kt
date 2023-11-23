@@ -1,7 +1,6 @@
 package com.ctf.backend.database.repo
 
 import com.ctf.backend.database.entity.Team
-import com.ctf.backend.database.entity.User
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*

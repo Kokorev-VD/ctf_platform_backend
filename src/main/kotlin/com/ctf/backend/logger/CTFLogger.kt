@@ -1,4 +1,4 @@
-package com.ctf.backend.Logger
+package com.ctf.backend.logger
 
 import org.slf4j.LoggerFactory
 

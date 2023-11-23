@@ -1,10 +1,8 @@
 package com.ctf.backend.service.auth
 
-import com.ctf.backend.database.entity.UserLoginParams
 import com.ctf.backend.security.JwtParser
 import com.ctf.backend.security.model.Authority
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit

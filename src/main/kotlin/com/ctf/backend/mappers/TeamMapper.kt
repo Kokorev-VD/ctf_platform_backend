@@ -11,8 +11,8 @@ import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.CptTeamResponse
 import com.ctf.backend.models.response.TeamResponse
 import com.ctf.backend.util.createCode
+import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Repository
 
 @Component
 class TeamMapper (
@@ -72,6 +72,20 @@ class TeamMapper (
             code = code,
         )
     }
+
+    fun responseToCptResponse(response: TeamResponse) : CptTeamResponse =
+        CptTeamResponse(
+            rating = response.rating,
+            title = response.title,
+            info = response.info,
+            contacts = response.contacts,
+            preview = response.preview,
+            code = (if(response.captainId.toLong() == getPrincipal()) teamRepository.findTeamById(response.id.toLong()).orElseThrow { ResourceNotFoundException("team ${response.id}")}.code else ""),
+            captainId = response.captainId,
+            members = response.members,
+            id = response.id,
+
+        )
 
     fun updateRequestToEntity(request: TeamUpdateRequest) : Team{
         if (!teamRepository.findTeamByTitle(request.title).isEmpty) {

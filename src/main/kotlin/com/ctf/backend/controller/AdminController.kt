@@ -20,10 +20,10 @@ class AdminController(
     private val adminService: AdminService
 ) {
 
-    @PostMapping("/user/{userId}/team/{teamId}")
+    @PostMapping("/team/{teamId}/user/{userId}")
     fun addUserToTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = adminService.addUserToTeam(userId, teamId)
 
-    @DeleteMapping("/user/{userId}/team/{teamId}")
+    @DeleteMapping("/team/{teamId}/user/{userId}")
     fun deleteUserFromTeam(@PathVariable("userId") userId: Long, @PathVariable("teamId") teamId: Long) = adminService.deleteUserFromTeam(userId, teamId)
 
     @GetMapping("/team/{teamId}")

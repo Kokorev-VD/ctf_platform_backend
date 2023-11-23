@@ -1,6 +1,6 @@
 package com.ctf.backend.errors
 
-import com.ctf.backend.Logger.CTFLogger
+import com.ctf.backend.logger.CTFLogger
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude

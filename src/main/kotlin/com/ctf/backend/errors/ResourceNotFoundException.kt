@@ -1,7 +1,6 @@
 package com.ctf.backend.errors
 
 import org.springframework.http.HttpStatus
-import java.lang.reflect.Type
 
 class ResourceNotFoundException(
     data: Any? = null,

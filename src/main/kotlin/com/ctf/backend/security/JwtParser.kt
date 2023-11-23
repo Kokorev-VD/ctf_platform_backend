@@ -2,7 +2,6 @@ package com.ctf.backend.security
 
 import com.ctf.backend.errors.ApiError
 import com.ctf.backend.errors.CorruptedTokenException
-import com.ctf.backend.security.model.Authority
 import com.ctf.backend.security.model.UserPrincipal
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
@@ -11,12 +10,10 @@ import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import org.hibernate.validator.internal.util.annotation.AnnotationDescriptor
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
-import java.lang.module.ModuleDescriptor
 import java.util.*
 import javax.crypto.SecretKey
 import kotlin.collections.LinkedHashMap

@@ -1,6 +1,5 @@
 package com.ctf.backend.service
 
-import com.ctf.backend.database.entity.Team
 import com.ctf.backend.models.request.TeamCreationRequest
 import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.response.CptTeamResponse
@@ -9,30 +8,40 @@ import com.ctf.backend.models.response.TeamResponse
 
 interface TeamService {
 
-    fun getTeamsByCptId(cptId: Long) : Set<TeamResponse>
+    fun getTeamsByCptId(cptId: Long) : List<TeamResponse>
 
     fun getTeamById(id: Long) : TeamResponse
 
-    fun getTeamsByMemberId(memberId: Long) : Set<TeamResponse>
+    fun getTeamsByMemberId(memberId: Long) : List<TeamResponse>
 
-    fun addUserToTeam(teamId: String, code: String) : TeamResponse
+    fun getMyCptTeams() : List<CptTeamResponse>
 
-    fun cptAddUserToTeam(userId: Long, teamId: Long) : TeamResponse
+    fun getMyTeams() : List<CptTeamResponse>
+
+    fun getAllTeams() : List<TeamResponse>
+
+    fun cptDeleteTeam(teamId: Long) : TeamDeleteResponse
+
+    fun cptUpdateTeam(request: TeamUpdateRequest) : CptTeamResponse
 
     fun cptDeleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
 
-    fun check(teamId:Long):Unit
+    fun cptAddUserToTeam(userId: Long, teamId: Long) : CptTeamResponse
+
+    fun joinTeam(teamId: String, code: String) : TeamResponse
 
     fun createTeam(request: TeamCreationRequest) : TeamResponse
 
-    fun getMyCptTeams() : Set<CptTeamResponse>
+    /*
+      Realisations
+    */
+    fun addUserToTeam(userId: Long, teamId: Long) : CptTeamResponse
 
-    fun getMyTeams() : Set<TeamResponse>
+    fun deleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
 
-    fun getAllTeams() : Set<TeamResponse>
+    fun check(teamId:Long)
 
     fun deleteTeam(teamId: Long) : TeamDeleteResponse
 
-    fun updateTeam(request: TeamUpdateRequest) : TeamResponse
-
+    fun updateTeam(request: TeamUpdateRequest) : CptTeamResponse
 }
