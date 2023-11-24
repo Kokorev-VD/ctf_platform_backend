@@ -8,14 +8,11 @@ import org.springframework.stereotype.Component
 @Component
 class UserLoginParamsMapper {
 
-    fun asEntity(request: RegistrationRequest): UserLoginParams {
-        return UserLoginParams(
-            email = request.email
-        )
-    }
+    fun asEntity(request: RegistrationRequest): UserLoginParams =
+        UserLoginParams(email = request.email)
 
-    fun asRegistrationResponse(entity: UserLoginParams): UserRegistrationResponse {
-        return UserRegistrationResponse(
-        )
-    }
+
+    fun asRegistrationResponse(entity: UserLoginParams): UserRegistrationResponse =
+        UserRegistrationResponse()
+
 }

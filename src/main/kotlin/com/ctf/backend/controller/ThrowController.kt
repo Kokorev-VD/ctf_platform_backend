@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("$API_VERSION_1/throw")
 class ThrowController {
 
-    @GetMapping()
+    @GetMapping
     fun throwError() {
         throw ApiError(status = HttpStatus.INTERNAL_SERVER_ERROR, message = "TEST")
     }

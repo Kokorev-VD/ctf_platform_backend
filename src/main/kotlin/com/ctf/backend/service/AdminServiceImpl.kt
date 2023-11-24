@@ -34,12 +34,12 @@ class AdminServiceImpl(
     override fun deleteUser(userId: Long): UserDeleteResponse =
         userService.deleteProfile(userId)
 
-    override fun createTeam(request: TeamCreationRequest, userId: Long): CptTeamResponse {
-        return teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply {
+    override fun createTeam(request: TeamCreationRequest, userId: Long): CptTeamResponse =
+        teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply {
             captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException("user $userId") }
             this.members = setOf(captain)
         }))
-    }
+
 
     override fun updateUser(request: UserUpdateRequest): UserResponse =
         userService.updateUser(request)

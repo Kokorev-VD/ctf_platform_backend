@@ -3,7 +3,6 @@ package com.ctf.backend.controller
 import com.ctf.backend.models.request.AddUserRequest
 import com.ctf.backend.models.request.TeamCreationRequest
 import com.ctf.backend.models.request.TeamUpdateRequest
-import com.ctf.backend.models.response.TeamResponse
 import com.ctf.backend.service.TeamService
 import com.ctf.backend.util.API_VERSION_1
 import org.springframework.web.bind.annotation.*

@@ -4,11 +4,9 @@ import com.ctf.backend.models.request.LoginRequest
 import com.ctf.backend.models.request.RegistrationRequest
 import com.ctf.backend.models.response.LoginResponse
 import com.ctf.backend.models.response.UserRegistrationResponse
-import com.ctf.backend.models.response.UserResponse
 import com.ctf.backend.service.auth.AuthService
 import com.ctf.backend.util.API_PUBLIC
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
