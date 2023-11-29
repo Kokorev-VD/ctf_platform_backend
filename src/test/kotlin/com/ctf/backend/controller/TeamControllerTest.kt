@@ -356,7 +356,7 @@ class TeamControllerTest {
             applicationUrl() + "$API_PUBLIC/auth/login",
             HttpEntity(
                 LoginRequest(
-                    email = "test@test.test",
+                    email = "test2@test.test",
                     password = "12345678",
                 ),
             ),
