@@ -5,11 +5,6 @@ info:
 servers:
   - url: http://{{api}}
   - url: http://{{local}}
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
 security:
   - bearerAuth: []
 tags:
@@ -58,7 +53,13 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: {"accessJwt" : "someAccessJwt"}
+        '400':
+          description: User with current email already exists
+          content:
+            application/json : {
+              "message" : "Пользователь some_email уже существует"
+            }
   /public/auth/login:
     post:
       tags:
@@ -76,7 +77,7 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: {"accessJwt" : "someJwt"}
   /checkOut:
     get:
       tags:
@@ -552,3 +553,8 @@ paths:
           description: Successful response
           content:
             application/json: {}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
