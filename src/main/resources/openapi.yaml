@@ -1,0 +1,554 @@
+openapi: 3.0.0
+info:
+  title: CTF
+  version: 1.0.0
+servers:
+  - url: http://{{api}}
+  - url: http://{{local}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: Common
+  - name: Auth
+  - name: User
+  - name: Team
+  - name: Admin
+paths:
+  /public/hello:
+    get:
+      tags:
+        - Common
+      summary: hello
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /throw:
+    get:
+      tags:
+        - Common
+      summary: throw
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /public/auth/registration:
+    post:
+      tags:
+        - Auth
+      summary: registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: admin@test.test
+                password: '12345678'
+                name: admin
+                surname: admin
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /public/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: admin@test.test
+                password: '12345678'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /checkOut:
+    get:
+      tags:
+        - Auth
+      summary: checkOut
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: profile
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '7'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/me:
+    get:
+      tags:
+        - User
+      summary: my_profile
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - User
+      summary: deleteMyProfile
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - User
+      summary: name
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '1'
+                name: changed_name
+                surname: changed_surnmae
+                rating: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/all:
+    get:
+      tags:
+        - User
+      summary: all
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/leave/{teamId}:
+    delete:
+      tags:
+        - User
+      summary: leaveFromTeam
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '5'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/cpt/{id}:
+    get:
+      tags:
+        - Team
+      summary: captainId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '25'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/{id}:
+    get:
+      tags:
+        - Team
+      summary: teamId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '3'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/member/{id}:
+    get:
+      tags:
+        - Team
+      summary: memberId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '4'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/my/cpt:
+    get:
+      tags:
+        - Team
+      summary: myCpt
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/my:
+    get:
+      tags:
+        - Team
+      summary: my
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/all:
+    get:
+      tags:
+        - Team
+      summary: all
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/join:
+    post:
+      tags:
+        - Team
+      summary: join
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                teamId: '44'
+                code: 0QsoSESkng
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team:
+    post:
+      tags:
+        - Team
+      summary: new
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: test_team
+                info: test_team_info
+                contacts: test_contacts
+                preview: test_preview
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - Team
+      summary: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '8'
+                rating: 0
+                title: test_title
+                info: changed_info
+                contacts: changed_contacts
+                preview: changed_preview
+                captainId: '17'
+                members:
+                  - '17'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/{teamId}/user/{userId}:
+    post:
+      tags:
+        - Team
+      summary: addUserToTeam
+      requestBody:
+        content: {}
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '44'
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '19'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Team
+      summary: deleteUserFromTeam
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '2'
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '6'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /team/{teamId}:
+    delete:
+      tags:
+        - Team
+      summary: delete
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '44'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/team/{teamId}:
+    get:
+      tags:
+        - Admin
+      summary: team
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '40'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Admin
+      summary: deleteTeam
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '43'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/cpt/{userId}:
+    post:
+      tags:
+        - Admin
+      summary: createTeamWithCptId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: test_team
+                info: test_team_info
+                contacts: test_team_contacts
+                preview: test_team_preview
+      parameters:
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '15'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/team/{teamId}/user/{userId}:
+    post:
+      tags:
+        - Admin
+      summary: addUserToTeam
+      requestBody:
+        content: {}
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '4'
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '8'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Admin
+      summary: deleteUserFromTeam
+      parameters:
+        - name: teamId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '40'
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '18'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/user/{userId}:
+    delete:
+      tags:
+        - Admin
+      summary: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '15'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/user:
+    put:
+      tags:
+        - Admin
+      summary: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '15'
+                name: changed_name
+                surname: changed_surname
+                rating: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /admin/team:
+    put:
+      tags:
+        - Admin
+      summary: updateTeam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '43'
+                rating: 0
+                title: changed_test_team
+                info: changed_info
+                contacts: changed_info
+                preview: changed_preview
+                captainId: '18'
+                members:
+                  - '15'
+                  - '16'
+                  - '18'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

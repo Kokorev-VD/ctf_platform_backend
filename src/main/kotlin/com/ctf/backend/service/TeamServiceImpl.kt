@@ -22,14 +22,18 @@ class TeamServiceImpl(
     private val userRepository: UserDao,
 ) : TeamService {
 
-    override fun getTeamsByCptId(cptId: Long): List<TeamResponse> =
-        teamRepository.findTeamsByUserId(cptId).map { mapper.entityToResponse(it) }
+    override fun getTeamsByCptId(cptId: Long): List<TeamResponse> {
+        userRepository.findUserByUserLoginParamsId(cptId).orElseThrow { ResourceNotFoundException("user $cptId") }
+        return teamRepository.findTeamsByUserId(cptId).map { mapper.entityToResponse(it) }
+    }
 
     override fun getTeamById(id: Long): TeamResponse =
-        mapper.entityToResponse(teamRepository.findTeamById(id).orElseThrow { ResourceNotFoundException(id) })
+        mapper.entityToResponse(teamRepository.findTeamById(id).orElseThrow { ResourceNotFoundException("team $id") })
 
-    override fun getTeamsByMemberId(memberId: Long): List<TeamResponse> =
-        teamRepository.findTeamsByUserId(memberId).map { mapper.entityToResponse(it) }
+    override fun getTeamsByMemberId(memberId: Long): List<TeamResponse> {
+        userRepository.findUserByUserLoginParamsId(memberId).orElseThrow { ResourceNotFoundException("user $memberId") }
+        return teamRepository.findTeamsByUserId(memberId).map { mapper.entityToResponse(it) }
+    }
 
     override fun getMyCptTeams(): List<CptTeamResponse> =
         teamRepository.findTeamsByCaptainId(getPrincipal()).map { mapper.entityToCptResponse(it) }
@@ -61,7 +65,7 @@ class TeamServiceImpl(
     }
 
     override fun joinTeam(teamId: String, code: String): TeamResponse {
-        val team = teamRepository.findTeamById(teamId.toLong()).orElseThrow { ResourceNotFoundException(teamId) }
+        val team = teamRepository.findTeamById(teamId.toLong()).orElseThrow { ResourceNotFoundException("team $teamId") }
         if (team.code != code) {
             throw CorruptedTeamCodeException()
         }
@@ -74,13 +78,7 @@ class TeamServiceImpl(
             throw AlreadyInTeamException(userId = getPrincipal().toString(), teamId = teamId)
         }
         val newMembers: MutableSet<User> = team.members as MutableSet<User>
-        newMembers.add(
-            userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow {
-                ResourceNotFoundException(
-                    getPrincipal(),
-                )
-            },
-        )
+        newMembers.add(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException("user ${getPrincipal()}") },)
         team.members = newMembers
         teamRepository.save(team)
         return mapper.entityToResponse(team)
@@ -119,7 +117,7 @@ class TeamServiceImpl(
     }
 
     override fun check(teamId: Long) {
-        if (teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException(teamId) }.captain.userLoginParams.id != getPrincipal()) {
+        if (teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException("team $teamId") }.captain.userLoginParams.id != getPrincipal()) {
             throw NotEnoughAccessRightsException()
         }
     }

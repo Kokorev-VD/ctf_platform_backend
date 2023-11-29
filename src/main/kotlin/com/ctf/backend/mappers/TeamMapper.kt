@@ -1,7 +1,6 @@
 package com.ctf.backend.mappers
 
 import com.ctf.backend.database.entity.Team
-import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
 import com.ctf.backend.database.repo.UserDao
 import com.ctf.backend.errors.AlreadyExistsException
@@ -94,11 +93,7 @@ class TeamMapper(
                 throw AlreadyExistsException("team with title ${request.title}")
             }
         }
-        val members = mutableSetOf<User>()
-        for (m in request.members) {
-            members.add(userRepository.findUserByUserLoginParamsId(m.toLong()).orElseThrow { ResourceNotFoundException(m) })
-        }
-        val code = teamRepository.findTeamById(request.id.toLong()).orElseThrow { ResourceNotFoundException(request.id) }.code
+        val code = teamRepository.findTeamById(request.id.toLong()).orElseThrow { ResourceNotFoundException("team ${request.id}") }.code
         return Team(
             rating = request.rating,
             title = request.title,
@@ -107,8 +102,8 @@ class TeamMapper(
             preview = request.preview,
             code = code,
         ).apply {
-            this.captain = userRepository.findUserByUserLoginParamsId(request.captainId.toLong()).orElseThrow { ResourceNotFoundException(request.captainId) }
-            this.members = members
+            this.captain = userRepository.findUserByUserLoginParamsId(request.captainId.toLong()).orElseThrow { ResourceNotFoundException("user ${request.captainId}") }
+            this.members = request.members.map { userRepository.findUserByUserLoginParamsId(it.toLong()).orElseThrow { ResourceNotFoundException("user $it") } }.toSet()
         }
     }
 
