@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("$API_VERSION_1/user")
-class  UserController(
+class UserController(
     private val userService: UserServiceImpl,
 ) {
 

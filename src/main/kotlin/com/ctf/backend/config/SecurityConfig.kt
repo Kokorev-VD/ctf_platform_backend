@@ -23,17 +23,17 @@ import org.springframework.web.cors.CorsConfigurationSource
 class SecurityConfig(
     private val jwtFilter: JwtFilter,
     private val corsConfig: CorsConfigurationSource,
-    ) {
+) {
 
     @Bean
     fun getEncoder(): PasswordEncoder {
-        return  BCryptPasswordEncoder()
+        return BCryptPasswordEncoder()
     }
 
     @Bean
     fun configure(http: HttpSecurity): SecurityFilterChain {
         http.cors { it.configurationSource(corsConfig) }
-        http.csrf { csrf -> csrf.disable()}
+        http.csrf { csrf -> csrf.disable() }
 
         http.authorizeHttpRequests { requests ->
             requests.requestMatchers("$API_PUBLIC/**").permitAll()

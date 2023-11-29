@@ -19,7 +19,10 @@ class AuthController(
 ) {
 
     @PostMapping("/registration")
-    fun register(@Valid @RequestBody request: RegistrationRequest) : UserRegistrationResponse{
+    fun register(
+        @Valid @RequestBody
+        request: RegistrationRequest,
+    ): UserRegistrationResponse {
         return service.registration(request)
     }
 

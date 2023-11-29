@@ -1,10 +1,7 @@
 package com.ctf.backend.mappers
 
-import com.ctf.backend.database.entity.Team
 import com.ctf.backend.database.entity.User
 import com.ctf.backend.database.repo.TeamDao
-import com.ctf.backend.errors.CaptainNotInATeamException
-import com.ctf.backend.errors.ResourceNotFoundException
 import com.ctf.backend.models.request.UserUpdateRequest
 import com.ctf.backend.models.response.UserResponse
 import org.springframework.stereotype.Component
@@ -14,13 +11,13 @@ class UserMapper(
     val teamRepository: TeamDao,
 ) {
 
-    fun asUserResponse(entity: User) : UserResponse {
+    fun asUserResponse(entity: User): UserResponse {
         val teams: MutableSet<String> = mutableSetOf()
-        val cptTeams : MutableSet<String> = mutableSetOf()
-        for(x in entity.team){
+        val cptTeams: MutableSet<String> = mutableSetOf()
+        for (x in entity.team) {
             teams.add(x.id.toString())
         }
-        for(x in entity.cptTeams){
+        for (x in entity.cptTeams) {
             cptTeams.add(x.id.toString())
         }
         return UserResponse(
@@ -35,37 +32,16 @@ class UserMapper(
         )
     }
 
-    fun asEntity(request: UserUpdateRequest) : User{
-        val team = mutableSetOf<Team>()
-        val cptTeam = mutableSetOf<Team>()
-        for(t in request.teams){
-            team.add(teamRepository.findTeamById(t.toLong()).orElseThrow { ResourceNotFoundException(t) })
-        }
-        for(t in request.cptTeams){
-            cptTeam.add(teamRepository.findTeamById(t.toLong()).orElseThrow { ResourceNotFoundException(t) })
-        }
+    fun asEntity(request: UserUpdateRequest): User {
         return User(
             name = request.name,
             surname = request.surname,
             rating = request.rating,
         ).apply {
             this.id = request.id.toLong()
-            this.team = team
-            this.cptTeams = cptTeam
         }
     }
-    fun updateEntity(user:User, newUser: User) : User{
-        for (cptTeam in newUser.cptTeams){
-            if (!newUser.team.contains(cptTeam)){
-                throw CaptainNotInATeamException(newUser.id.toString(), cptTeam.id.toString())
-            }
-        }
-        user.team = newUser.team
-        user.cptTeams = newUser.cptTeams
-        for(t in user.cptTeams) {
-            t.captain = user
-            teamRepository.save(t)
-        }
+    fun updateEntity(user: User, newUser: User): User {
         user.name = newUser.name
         user.surname = newUser.surname
         user.rating = newUser.rating

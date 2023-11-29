@@ -8,40 +8,40 @@ import com.ctf.backend.models.response.TeamResponse
 
 interface TeamService {
 
-    fun getTeamsByCptId(cptId: Long) : List<TeamResponse>
+    fun getTeamsByCptId(cptId: Long): List<TeamResponse>
 
-    fun getTeamById(id: Long) : TeamResponse
+    fun getTeamById(id: Long): TeamResponse
 
-    fun getTeamsByMemberId(memberId: Long) : List<TeamResponse>
+    fun getTeamsByMemberId(memberId: Long): List<TeamResponse>
 
-    fun getMyCptTeams() : List<CptTeamResponse>
+    fun getMyCptTeams(): List<CptTeamResponse>
 
-    fun getMyTeams() : List<CptTeamResponse>
+    fun getMyTeams(): List<CptTeamResponse>
 
-    fun getAllTeams() : List<TeamResponse>
+    fun getAllTeams(): List<TeamResponse>
 
-    fun cptDeleteTeam(teamId: Long) : TeamDeleteResponse
+    fun cptDeleteTeam(teamId: Long): TeamDeleteResponse
 
-    fun cptUpdateTeam(request: TeamUpdateRequest) : CptTeamResponse
+    fun cptUpdateTeam(request: TeamUpdateRequest): CptTeamResponse
 
-    fun cptDeleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
+    fun cptDeleteUserFromTeam(userId: Long, teamId: Long): TeamResponse
 
-    fun cptAddUserToTeam(userId: Long, teamId: Long) : CptTeamResponse
+    fun cptAddUserToTeam(userId: Long, teamId: Long): CptTeamResponse
 
-    fun joinTeam(teamId: String, code: String) : TeamResponse
+    fun joinTeam(teamId: String, code: String): TeamResponse
 
-    fun createTeam(request: TeamCreationRequest) : TeamResponse
+    fun createTeam(request: TeamCreationRequest): TeamResponse
 
     /*
       Realisations
     */
-    fun addUserToTeam(userId: Long, teamId: Long) : CptTeamResponse
+    fun addUserToTeam(userId: Long, teamId: Long): CptTeamResponse
 
-    fun deleteUserFromTeam(userId: Long, teamId: Long) : TeamResponse
+    fun deleteUserFromTeam(userId: Long, teamId: Long): TeamResponse
 
-    fun check(teamId:Long)
+    fun check(teamId: Long)
 
-    fun deleteTeam(teamId: Long) : TeamDeleteResponse
+    fun deleteTeam(teamId: Long): TeamDeleteResponse
 
-    fun updateTeam(request: TeamUpdateRequest) : CptTeamResponse
+    fun updateTeam(request: TeamUpdateRequest): CptTeamResponse
 }

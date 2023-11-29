@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.Query
 
 interface BlackListDTO : AppRepository<BlackList> {
 
-    fun existsByDeletedUserId(deletedUserId : Long) : Boolean
+    fun existsByDeletedUserId(deletedUserId: Long): Boolean
 
     @Transactional
     @Modifying
-    @Query( "delete from BlackListTable where createdAt < (now() - interval '1 days')", nativeQuery = true)
+    @Query("delete from BlackListTable where createdAt < (now() - interval '1 days')", nativeQuery = true)
     fun deleteExpiredDeletedUser()
-
 }

@@ -6,6 +6,6 @@ class ResourceNotFoundException(
     data: Any? = null,
 ) : ApiError(
     status = HttpStatus.NOT_FOUND,
-    message = "Такого ресурса не существует ${data?:""}",
-    debugMessage = "Resource not found ${data?:""}"
+    message = "Такого ресурса не существует ${data ?: ""}",
+    debugMessage = "Resource not found ${data ?: ""}",
 )

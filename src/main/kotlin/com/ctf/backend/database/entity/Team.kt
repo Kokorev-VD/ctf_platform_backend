@@ -1,8 +1,14 @@
 package com.ctf.backend.database.entity
 
 import com.ctf.backend.database.entity.common.AbstractCreatedAtEntity
-import jakarta.persistence.*
-
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "TeamTable")
@@ -24,7 +30,7 @@ class Team(
     var preview: String = "default",
 
     @Column(name = "code", unique = true, nullable = false)
-    var code: String
+    var code: String,
 ) : AbstractCreatedAtEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -32,10 +38,10 @@ class Team(
     lateinit var captain: User
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserToTeamTable",
+    @JoinTable(
+        name = "UserToTeamTable",
         joinColumns = [JoinColumn(name = "teamId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "memberId", referencedColumnName = "id")],
-        )
+    )
     var members: Set<User> = HashSet()
-
 }

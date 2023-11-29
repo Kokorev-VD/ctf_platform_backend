@@ -11,13 +11,14 @@ import com.ctf.backend.models.request.RegistrationRequest
 import com.ctf.backend.models.response.LoginResponse
 import com.ctf.backend.models.response.UserRegistrationResponse
 import com.ctf.backend.service.UserServiceImpl
-import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class AuthServiceImpl(
     private val dao: UserLoginParamsDao,
     private val jwtHelper: JwtHelper,
@@ -27,7 +28,6 @@ class AuthServiceImpl(
 ) : AuthService {
 
     @Modifying
-    @Transactional
     override fun registration(request: RegistrationRequest): UserRegistrationResponse {
         if (dao.existsByEmail(request.email)) {
             throw AlreadyExistsException(request.email)
@@ -42,11 +42,10 @@ class AuthServiceImpl(
         return mapper.asRegistrationResponse(userLP).apply { this.accessJwt = login(LoginRequest(request.email, request.password)).accessJwt }
     }
 
-    @Transactional
     override fun login(request: LoginRequest): LoginResponse {
         val user = dao.findByEmail(request.email).orElseThrow { ResourceNotFoundException(request.email) }
         if (!encoder.matches(request.password, user.hash)) {
-            throw ApiError(HttpStatus.UNAUTHORIZED, "Неправильный пароль")
+            throw ApiError(HttpStatus.UNAUTHORIZED, "Неправильный пароль", "Wrong password")
         }
         return LoginResponse(accessJwt = jwtHelper.generateAccessToken(user.id, user.admin))
     }

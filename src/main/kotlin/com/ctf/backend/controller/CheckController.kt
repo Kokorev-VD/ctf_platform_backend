@@ -11,5 +11,4 @@ class CheckController {
 
     @GetMapping("/checkOut")
     fun checkOut() = true
-
 }

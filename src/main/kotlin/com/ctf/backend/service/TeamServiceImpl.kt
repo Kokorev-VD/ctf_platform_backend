@@ -12,8 +12,10 @@ import com.ctf.backend.models.response.TeamDeleteResponse
 import com.ctf.backend.models.response.TeamResponse
 import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class TeamServiceImpl(
     private val teamRepository: TeamDao,
     private val mapper: TeamMapper,
@@ -24,7 +26,7 @@ class TeamServiceImpl(
         teamRepository.findTeamsByUserId(cptId).map { mapper.entityToResponse(it) }
 
     override fun getTeamById(id: Long): TeamResponse =
-        mapper.entityToResponse(teamRepository.findTeamById(id).orElseThrow{ ResourceNotFoundException(id) })
+        mapper.entityToResponse(teamRepository.findTeamById(id).orElseThrow { ResourceNotFoundException(id) })
 
     override fun getTeamsByMemberId(memberId: Long): List<TeamResponse> =
         teamRepository.findTeamsByUserId(memberId).map { mapper.entityToResponse(it) }
@@ -37,7 +39,6 @@ class TeamServiceImpl(
 
     override fun getAllTeams(): List<TeamResponse> =
         teamRepository.findAll().map { mapper.entityToResponse(it) }
-
 
     override fun cptDeleteTeam(teamId: Long): TeamDeleteResponse {
         check(teamId)
@@ -61,18 +62,25 @@ class TeamServiceImpl(
 
     override fun joinTeam(teamId: String, code: String): TeamResponse {
         val team = teamRepository.findTeamById(teamId.toLong()).orElseThrow { ResourceNotFoundException(teamId) }
-        if (team.code != code){
+        if (team.code != code) {
             throw CorruptedTeamCodeException()
         }
-        if (userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow{ ResourceNotFoundException(
-                getPrincipal()
-            ) } in team.members){
-            throw AlreadyInTeamException()
+        if (userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow {
+                ResourceNotFoundException(
+                    getPrincipal(),
+                )
+            } in team.members
+        ) {
+            throw AlreadyInTeamException(userId = getPrincipal().toString(), teamId = teamId)
         }
         val newMembers: MutableSet<User> = team.members as MutableSet<User>
-        newMembers.add(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow{ ResourceNotFoundException(
-            getPrincipal()
-        ) })
+        newMembers.add(
+            userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow {
+                ResourceNotFoundException(
+                    getPrincipal(),
+                )
+            },
+        )
         team.members = newMembers
         teamRepository.save(team)
         return mapper.entityToResponse(team)
@@ -81,8 +89,8 @@ class TeamServiceImpl(
     override fun addUserToTeam(userId: Long, teamId: Long): CptTeamResponse {
         val team = teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException("team $teamId") }
         val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException("user $userId") }
-        if(team.members.contains(user)){
-            throw AlreadyInTeamException()
+        if (team.members.contains(user)) {
+            throw AlreadyInTeamException(userId = userId.toString(), teamId = teamId.toString())
         }
         team.members = (team.members as MutableSet<User>).apply {
             this.add(user)
@@ -94,50 +102,45 @@ class TeamServiceImpl(
     override fun deleteUserFromTeam(userId: Long, teamId: Long): TeamResponse {
         val team = teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException("team $teamId") }
         val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException("user $userId") }
-        if(!team.members.contains(user)){
+        if (!team.members.contains(user)) {
             throw UserNotInATeamException(userId, teamId)
         }
         team.members = (team.members as MutableSet<User>).apply {
             this.remove(user)
         }
-        if(team.captain.id == userId && team.members.isNotEmpty()){
+        if (team.captain.id == userId && team.members.isNotEmpty()) {
             team.captain = team.members.first()
         }
         teamRepository.save(team)
-        if (team.members.isEmpty()){
+        if (team.members.isEmpty()) {
             deleteTeam(team.id)
         }
         return mapper.entityToResponse(team)
     }
 
     override fun check(teamId: Long) {
-        if(teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException(teamId) }.captain.userLoginParams.id != getPrincipal()){
+        if (teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException(teamId) }.captain.userLoginParams.id != getPrincipal()) {
             throw NotEnoughAccessRightsException()
         }
     }
 
-
     override fun createTeam(request: TeamCreationRequest): TeamResponse {
         val team = mapper.requestToEntity(request)
-        team.members = setOf<User>(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException(getPrincipal())})
-        team.captain = userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow{ ResourceNotFoundException(
-            getPrincipal()
-        ) }
+        team.members = setOf<User>(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException("user ${getPrincipal()}") })
+        team.captain = userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException("user ${getPrincipal()}") }
         return mapper.entityToResponse(teamRepository.save(team))
     }
 
-
-
     override fun deleteTeam(teamId: Long): TeamDeleteResponse {
-        teamRepository.findTeamById(teamId).orElseThrow{ResourceNotFoundException("team $teamId")}
+        teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException("team $teamId") }
         teamRepository.deleteById(teamId)
         return TeamDeleteResponse(message = "Вы удалили команду $teamId")
     }
 
     override fun updateTeam(request: TeamUpdateRequest): CptTeamResponse {
         val teamId = request.id.toLong()
-        val team = teamRepository.findTeamById(teamId).orElseThrow{ ResourceNotFoundException("team $teamId") }
-        if(request.members.isEmpty()){
+        val team = teamRepository.findTeamById(teamId).orElseThrow { ResourceNotFoundException("team $teamId") }
+        if (request.members.isEmpty()) {
             deleteTeam(teamId)
             throw DeletedObjectResponse("team $teamId")
         }

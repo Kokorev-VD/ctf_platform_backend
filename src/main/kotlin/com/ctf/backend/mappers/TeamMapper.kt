@@ -15,14 +15,14 @@ import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Component
 
 @Component
-class TeamMapper (
+class TeamMapper(
     private val userRepository: UserDao,
     private val teamRepository: TeamDao,
 ) {
 
-    fun entityToResponse(entity: Team) : TeamResponse{
+    fun entityToResponse(entity: Team): TeamResponse {
         val members = mutableSetOf<String>()
-        for(member in entity.members) {
+        for (member in entity.members) {
             members.add(member.userLoginParams.id.toString())
         }
         return TeamResponse(
@@ -33,13 +33,13 @@ class TeamMapper (
             preview = entity.preview,
             captainId = entity.captain.userLoginParams.id.toString(),
             members = members,
-            id = entity.id.toString()
+            id = entity.id.toString(),
         )
     }
 
-    fun entityToCptResponse(entity: Team) : CptTeamResponse{
+    fun entityToCptResponse(entity: Team): CptTeamResponse {
         val members = mutableSetOf<String>()
-        for(member in entity.members) {
+        for (member in entity.members) {
             members.add(member.userLoginParams.id.toString())
         }
         return CptTeamResponse(
@@ -51,13 +51,13 @@ class TeamMapper (
             code = entity.code,
             captainId = entity.captain.userLoginParams.id.toString(),
             members = members,
-            id = entity.id.toString()
+            id = entity.id.toString(),
         )
     }
 
-    fun requestToEntity(request: TeamCreationRequest) :  Team{
+    fun requestToEntity(request: TeamCreationRequest): Team {
         var code = createCode()
-        while (!teamRepository.findTeamByCode(code).isEmpty){
+        while (!teamRepository.findTeamByCode(code).isEmpty) {
             code = createCode()
         }
         if (!teamRepository.findTeamByTitle(request.title).isEmpty) {
@@ -73,26 +73,29 @@ class TeamMapper (
         )
     }
 
-    fun responseToCptResponse(response: TeamResponse) : CptTeamResponse =
+    fun responseToCptResponse(response: TeamResponse): CptTeamResponse =
         CptTeamResponse(
             rating = response.rating,
             title = response.title,
             info = response.info,
             contacts = response.contacts,
             preview = response.preview,
-            code = (if(response.captainId.toLong() == getPrincipal()) teamRepository.findTeamById(response.id.toLong()).orElseThrow { ResourceNotFoundException("team ${response.id}")}.code else ""),
+            code = (if (response.captainId.toLong() == getPrincipal()) teamRepository.findTeamById(response.id.toLong()).orElseThrow { ResourceNotFoundException("team ${response.id}") }.code else ""),
             captainId = response.captainId,
             members = response.members,
             id = response.id,
 
         )
 
-    fun updateRequestToEntity(request: TeamUpdateRequest) : Team{
-        if (!teamRepository.findTeamByTitle(request.title).isEmpty) {
-            throw AlreadyExistsException("team with title ${request.title}")
+    fun updateRequestToEntity(request: TeamUpdateRequest): Team {
+        val teamByTitle = teamRepository.findTeamByTitle(request.title)
+        if (!teamByTitle.isEmpty) {
+            if (teamByTitle.orElseThrow().id != request.id.toLong()) {
+                throw AlreadyExistsException("team with title ${request.title}")
+            }
         }
         val members = mutableSetOf<User>()
-        for (m in request.members){
+        for (m in request.members) {
             members.add(userRepository.findUserByUserLoginParamsId(m.toLong()).orElseThrow { ResourceNotFoundException(m) })
         }
         val code = teamRepository.findTeamById(request.id.toLong()).orElseThrow { ResourceNotFoundException(request.id) }.code
@@ -102,15 +105,15 @@ class TeamMapper (
             info = request.info,
             contacts = request.contacts,
             preview = request.preview,
-            code = code
+            code = code,
         ).apply {
-            this.captain = userRepository.findUserByUserLoginParamsId(request.captainId.toLong()).orElseThrow{ ResourceNotFoundException(request.captainId) }
+            this.captain = userRepository.findUserByUserLoginParamsId(request.captainId.toLong()).orElseThrow { ResourceNotFoundException(request.captainId) }
             this.members = members
         }
     }
 
     fun updateEntity(team: Team, newTeam: Team): Team {
-        team.members =  newTeam.members
+        team.members = newTeam.members
         team.info = newTeam.info
         team.captain = newTeam.captain
         team.contacts = newTeam.contacts

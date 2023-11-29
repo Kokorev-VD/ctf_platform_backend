@@ -7,7 +7,6 @@ import com.ctf.backend.service.TeamService
 import com.ctf.backend.util.API_VERSION_1
 import org.springframework.web.bind.annotation.*
 
-
 @RestController
 @RequestMapping("$API_VERSION_1/team")
 class TeamController(
@@ -49,5 +48,4 @@ class TeamController(
 
     @PostMapping("")
     fun createTeam(@RequestBody teamCreationRequest: TeamCreationRequest) = teamService.createTeam(teamCreationRequest)
-
 }

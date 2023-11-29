@@ -8,25 +8,25 @@ import com.ctf.backend.models.response.UserResponse
 
 interface UserService {
 
-    fun getUserById(id: Long) : UserResponse
+    fun getUserById(id: Long): UserResponse
 
-    fun getMyProfile() : UserResponse
+    fun getMyProfile(): UserResponse
 
-    fun deleteMyProfile() : UserDeleteResponse
+    fun deleteMyProfile(): UserDeleteResponse
 
-    fun updateMyProfile(request: UserUpdateRequest) : UserResponse
+    fun updateMyProfile(request: UserUpdateRequest): UserResponse
 
-    fun leaveFromTeam(teamId: Long) : TeamResponse
+    fun leaveFromTeam(teamId: Long): TeamResponse
 
-    fun getAllUsers() : Set<UserResponse>
+    fun getAllUsers(): Set<UserResponse>
 
     /*
       Realisations
     */
 
-    fun createUser(user: User) : User
+    fun createUser(user: User): User
 
-    fun updateUser(request: UserUpdateRequest) : UserResponse
+    fun updateUser(request: UserUpdateRequest): UserResponse
 
-    fun deleteProfile(userId:Long) : UserDeleteResponse
+    fun deleteProfile(userId: Long): UserDeleteResponse
 }

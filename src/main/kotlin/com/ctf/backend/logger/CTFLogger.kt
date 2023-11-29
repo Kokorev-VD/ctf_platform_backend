@@ -8,5 +8,4 @@ class CTFLogger(cl: Class<*>?) {
     fun error(msg: String?) {
         logger.error("\u001B[31m$msg\u001B[0m")
     }
-
 }

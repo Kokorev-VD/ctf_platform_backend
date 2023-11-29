@@ -7,4 +7,5 @@ interface UserDao : AppRepository<User> {
 
     fun findUserByUserLoginParamsId(userLoginParamsId: Long): Optional<User>
 
+    fun findUserById(id: Long): Optional<User>
 }

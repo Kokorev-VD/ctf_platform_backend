@@ -3,9 +3,8 @@ package com.ctf.backend.models.request
 import com.ctf.backend.util.EMAIL_REGEX
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import org.apache.tika.config.Field
 
-data class  RegistrationRequest(
+data class RegistrationRequest(
     @field:Pattern(regexp = EMAIL_REGEX)
     @field:Size(min = 4, max = 120)
     val email: String,

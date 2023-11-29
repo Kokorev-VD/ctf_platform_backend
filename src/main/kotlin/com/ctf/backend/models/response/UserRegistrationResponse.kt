@@ -1,6 +1,5 @@
 package com.ctf.backend.models.response
 
-class UserRegistrationResponse
-{
+class UserRegistrationResponse {
     lateinit var accessJwt: String
 }

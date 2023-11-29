@@ -10,4 +10,4 @@ import jakarta.persistence.Table
 class BlackList(
     @Column(name = "deletedUserId", nullable = false)
     val deletedUserId: Long,
-): AbstractCreatedAtEntity()
+) : AbstractCreatedAtEntity()

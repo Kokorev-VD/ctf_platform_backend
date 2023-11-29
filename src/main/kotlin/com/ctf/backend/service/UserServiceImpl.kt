@@ -13,22 +13,24 @@ import com.ctf.backend.models.response.UserDeleteResponse
 import com.ctf.backend.models.response.UserResponse
 import com.ctf.backend.util.getPrincipal
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class  UserServiceImpl(
+@Transactional
+class UserServiceImpl(
     val userRepository: UserDao,
     val userMapper: UserMapper,
     val userLPRepository: UserLoginParamsDao,
     val blackListRepository: BlackListDTO,
-    val teamService : TeamService,
-    ) : UserService {
-    override fun getUserById(id: Long) : UserResponse =
-        userMapper.asUserResponse(userRepository.findUserByUserLoginParamsId(id).orElseThrow{ ResourceNotFoundException(id)})
+    val teamService: TeamService,
+) : UserService {
+    override fun getUserById(id: Long): UserResponse =
+        userMapper.asUserResponse(userRepository.findUserByUserLoginParamsId(id).orElseThrow { ResourceNotFoundException("user $id") })
 
-    override fun getMyProfile() : UserResponse =
+    override fun getMyProfile(): UserResponse =
         userMapper.asUserResponse(userRepository.findUserByUserLoginParamsId(getPrincipal()).orElseThrow { ResourceNotFoundException() })
 
-    override fun createUser(user: User) : User =
+    override fun createUser(user: User): User =
         userRepository.save(user)
 
     override fun deleteMyProfile(): UserDeleteResponse =
@@ -41,11 +43,10 @@ class  UserServiceImpl(
         teamService.deleteUserFromTeam(getPrincipal(), teamId)
 
     override fun getAllUsers(): Set<UserResponse> =
-        userRepository.findAll().map{ userMapper.asUserResponse(it) }.toSet()
-
+        userRepository.findAll().map { userMapper.asUserResponse(it) }.toSet()
 
     override fun deleteProfile(userId: Long): UserDeleteResponse {
-        val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException("user $userId") }
+        val user = userRepository.findUserById(userId).orElseThrow { ResourceNotFoundException("user $userId") }
         for (t in user.team) {
             teamService.deleteUserFromTeam(userId = user.id, teamId = t.id)
         }
@@ -57,10 +58,9 @@ class  UserServiceImpl(
 
     override fun updateUser(request: UserUpdateRequest): UserResponse {
         val userId = request.id.toLong()
-        val user = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException("user $userId") }
+        val user = userRepository.findUserById(userId).orElseThrow { ResourceNotFoundException("user $userId") }
         val newUser = userMapper.asEntity(request)
         newUser.id = userId
         return userMapper.asUserResponse(userRepository.save(userMapper.updateEntity(user, newUser)))
     }
-
 }

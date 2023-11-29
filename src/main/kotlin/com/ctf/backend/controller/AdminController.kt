@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("$API_VERSION_1/admin")
 class AdminController(
-    private val adminService: AdminService
+    private val adminService: AdminService,
 ) {
 
     @PostMapping("/team/{teamId}/user/{userId}")
@@ -33,7 +33,7 @@ class AdminController(
     fun deleteTeam(@PathVariable("teamId") teamId: Long) = adminService.deleteTeam(teamId)
 
     @DeleteMapping("/user/{userId}")
-    fun deleteUser(@PathVariable("userId") userId:Long) = adminService.deleteUser(userId)
+    fun deleteUser(@PathVariable("userId") userId: Long) = adminService.deleteUser(userId)
 
     @PostMapping("/cpt/{userId}")
     fun createTeam(@RequestBody request: TeamCreationRequest, @PathVariable("userId") userId: Long) = adminService.createTeam(request, userId)
@@ -43,5 +43,4 @@ class AdminController(
 
     @PutMapping("/team")
     fun updateTeam(@RequestBody request: TeamUpdateRequest) = adminService.updateTeam(request)
-
 }

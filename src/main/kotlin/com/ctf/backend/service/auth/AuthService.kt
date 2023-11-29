@@ -7,8 +7,7 @@ import com.ctf.backend.models.response.UserRegistrationResponse
 
 interface AuthService {
 
-    fun registration (request: RegistrationRequest) : UserRegistrationResponse
+    fun registration(request: RegistrationRequest): UserRegistrationResponse
 
-    fun login (request: LoginRequest) : LoginResponse
-
+    fun login(request: LoginRequest): LoginResponse
 }

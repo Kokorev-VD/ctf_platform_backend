@@ -6,10 +6,9 @@ import org.springframework.security.core.GrantedAuthority
 class UserPrincipal(
     val userId: Long,
     val authorities: List<GrantedAuthority>,
-) : AbstractAuthenticationToken(authorities){
+) : AbstractAuthenticationToken(authorities) {
 
     override fun getCredentials() = null
 
     override fun getPrincipal() = userId
-
 }

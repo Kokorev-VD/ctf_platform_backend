@@ -5,8 +5,7 @@ import java.util.*
 
 interface UserLoginParamsDao : AppRepository<UserLoginParams> {
 
-    fun findByEmail(email: String) : Optional<UserLoginParams>
+    fun findByEmail(email: String): Optional<UserLoginParams>
 
     fun existsByEmail(email: String): Boolean
-
 }

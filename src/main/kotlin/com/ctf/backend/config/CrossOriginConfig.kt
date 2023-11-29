@@ -25,7 +25,7 @@ class CrossOriginConfig : WebMvcConfigurer {
 
     @Bean
     @Primary
-    fun corsConfigurationSource() : CorsConfigurationSource {
+    fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOriginPatterns = listOf("*")
             allowedMethods = listOf("*")

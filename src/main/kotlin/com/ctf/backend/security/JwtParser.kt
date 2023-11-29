@@ -24,7 +24,7 @@ class JwtParser(
     secret: String?,
 ) {
     val secret: SecretKey by lazy {
-        if (secret == null){
+        if (secret == null) {
             throw NullPointerException("spring.security.jwt.secret is not provided in configuration")
         }
         Keys.hmacShaKeyFor(secret.toByteArray())
@@ -58,7 +58,7 @@ class JwtParser(
         val userId = claims.body.get("userId", Integer::class.java)?.toLong() ?: throw CorruptedTokenException()
         val rawAuthorities = claims.body.get("authorities", List::class.java)?.toList() ?: throw CorruptedTokenException()
         val authorities = mutableListOf<GrantedAuthority>()
-        for (rawAuthority in rawAuthorities){
+        for (rawAuthority in rawAuthorities) {
             authorities.add(GrantedAuthority { (rawAuthority as LinkedHashMap<String, String>)["authority"] })
         }
         return UserPrincipal(userId, authorities as List<GrantedAuthority>)

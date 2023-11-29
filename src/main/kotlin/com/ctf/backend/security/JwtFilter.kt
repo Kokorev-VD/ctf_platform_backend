@@ -22,9 +22,9 @@ class JwtFilter(
     private val jwtParser: JwtParser,
     private val exceptionResolver: ExceptionResolver,
     private val blackListRepository: BlackListDTO,
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
 
-    override fun shouldNotFilter(request: HttpServletRequest) : Boolean {
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         return request.requestURI.containsAnyPath(
             API_PUBLIC,
         )
@@ -33,26 +33,26 @@ class JwtFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
             val header = request.getHeader("Authorization")
-                ?:throw ApiError(HttpStatus.UNAUTHORIZED, "Вы неавторизованы", "Authorization header not found")
+                ?: throw ApiError(HttpStatus.UNAUTHORIZED, "Вы неавторизованы", "Authorization header not found")
             SecurityContextHolder.getContext().authentication = jwtParser.createAuthToken(header)
-            if (blackListRepository.existsByDeletedUserId(getPrincipal())){
+            if (blackListRepository.existsByDeletedUserId(getPrincipal())) {
                 blackListRepository.deleteExpiredDeletedUser()
                 throw DeletedUserException()
             }
-            if (request.requestURI.containsAnyPath((API_ADMIN))){
+            if (request.requestURI.containsAnyPath((API_ADMIN))) {
                 val authorities = getAuthorities()
                 var admin = false
-                for (x in authorities){
-                    if(x.authority == Authority.ADMIN.authority.authority){
+                for (x in authorities) {
+                    if (x.authority == Authority.ADMIN.authority.authority) {
                         admin = true
                         break
                     }
                 }
-                if (!admin){
+                if (!admin) {
                     throw NotEnoughAccessRightsException()
                 }
             }
@@ -62,5 +62,4 @@ class JwtFilter(
             return
         }
     }
-
 }

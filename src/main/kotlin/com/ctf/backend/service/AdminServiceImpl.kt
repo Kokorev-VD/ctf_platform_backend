@@ -9,15 +9,17 @@ import com.ctf.backend.models.request.TeamUpdateRequest
 import com.ctf.backend.models.request.UserUpdateRequest
 import com.ctf.backend.models.response.*
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class AdminServiceImpl(
     private val teamRepository: TeamDao,
     private val userRepository: UserDao,
     private val teamMapper: TeamMapper,
     private val teamService: TeamService,
     private val userService: UserService,
-) : AdminService{
+) : AdminService {
 
     override fun addUserToTeam(userId: Long, teamId: Long): CptTeamResponse =
         teamService.addUserToTeam(userId, teamId)
@@ -35,11 +37,14 @@ class AdminServiceImpl(
         userService.deleteProfile(userId)
 
     override fun createTeam(request: TeamCreationRequest, userId: Long): CptTeamResponse =
-        teamMapper.entityToCptResponse(teamRepository.save(teamMapper.requestToEntity(request).apply {
-            captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow{ ResourceNotFoundException("user $userId") }
-            this.members = setOf(captain)
-        }))
-
+        teamMapper.entityToCptResponse(
+            teamRepository.save(
+                teamMapper.requestToEntity(request).apply {
+                    captain = userRepository.findUserByUserLoginParamsId(userId).orElseThrow { ResourceNotFoundException("user $userId") }
+                    this.members = setOf(captain)
+                },
+            ),
+        )
 
     override fun updateUser(request: UserUpdateRequest): UserResponse =
         userService.updateUser(request)

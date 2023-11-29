@@ -20,7 +20,7 @@ class ExceptionResolver {
         request: HttpServletRequest,
         response: HttpServletResponse,
         exception: Exception,
-        ){
+    ) {
         val exceptionToResponse = toApiError(exception)
         val objectMapper = ObjectMapper().findAndRegisterModules()
         response.contentType = MediaType.APPLICATION_JSON.toString()
@@ -33,11 +33,11 @@ class ExceptionResolver {
         if (exception is ApiError) return exception
         if (exception is MethodArgumentNotValidException) {
             var message = ""
-            for (error in exception.fieldErrors){
+            for (error in exception.fieldErrors) {
                 message += "${error.field}: ${error.defaultMessage};        "
             }
             return ApiError(message = message, status = HttpStatus.BAD_REQUEST)
         }
-        return ApiError(message = exception.message.orEmpty(), debugMessage =  exception.localizedMessage.orEmpty())
+        return ApiError(message = exception.message.orEmpty(), debugMessage = exception.localizedMessage.orEmpty())
     }
 }

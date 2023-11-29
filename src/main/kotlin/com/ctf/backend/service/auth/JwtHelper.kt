@@ -18,14 +18,14 @@ class JwtHelper(
 
     fun generateAccessToken(userId: Long, admin: Boolean): String {
         val authorities = mutableListOf(Authority.USER.authority)
-        if (admin){
+        if (admin) {
             authorities.add(Authority.ADMIN.authority)
         }
         return jwt.createToken(
             "userId" to userId,
             "permissions" to emptyList<String>(),
             "authorities" to authorities,
-            expiration = getAccessTokenExpiration()
+            expiration = getAccessTokenExpiration(),
         )
     }
 
