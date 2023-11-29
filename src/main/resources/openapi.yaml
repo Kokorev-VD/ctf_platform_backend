@@ -53,13 +53,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {"accessJwt" : "someAccessJwt"}
+            application/json: {}
         '400':
           description: User with current email already exists
           content:
-            application/json : {
-              "message" : "Пользователь some_email уже существует"
-            }
+            application/json : {}
   /public/auth/login:
     post:
       tags:
@@ -77,7 +75,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {"accessJwt" : "someJwt"}
+            application/json: {}
+        '401':
+          description: Wrong password
+          content:
+            application/json: {}
+        '404':
+          description: User not found
+          content:
+            application/json: {}
   /checkOut:
     get:
       tags:
@@ -88,6 +94,9 @@ paths:
           description: Successful response
           content:
             application/json: {}
+        '401':
+          description: Unauthorized
+          application/json: {}
   /user/{id}:
     get:
       tags:
@@ -105,6 +114,14 @@ paths:
           description: Successful response
           content:
             application/json: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: User not found
+          content:
+            application/json: { }
   /user/me:
     get:
       tags:
@@ -115,6 +132,10 @@ paths:
           description: Successful response
           content:
             application/json: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
     delete:
       tags:
         - User
@@ -123,7 +144,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
     put:
       tags:
         - User
@@ -136,13 +161,17 @@ paths:
               example:
                 id: '1'
                 name: changed_name
-                surname: changed_surnmae
+                surname: changed_surname
                 rating: 0
       responses:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
   /user/all:
     get:
       tags:
@@ -152,7 +181,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
   /user/leave/{teamId}:
     delete:
       tags:
@@ -169,7 +202,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
   /team/cpt/{id}:
     get:
       tags:
@@ -186,7 +227,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: User(captain) with this id doesn't exist
+          content:
+            application/json: { }
   /team/{id}:
     get:
       tags:
@@ -203,7 +252,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
   /team/member/{id}:
     get:
       tags:
@@ -220,7 +277,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: User(member) with this id doesn't exist
+          content:
+            application/json: { }
   /team/my/cpt:
     get:
       tags:
@@ -235,7 +300,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
   /team/my:
     get:
       tags:
@@ -245,7 +314,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
   /team/all:
     get:
       tags:
@@ -255,7 +328,11 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
   /team/join:
     post:
       tags:
@@ -273,7 +350,20 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '400':
+          description: Wrong team invitation code
+          content:
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
+
   /team:
     post:
       tags:
@@ -293,7 +383,15 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '400':
+          description: Team with this title already exists
+          content:
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
     put:
       tags:
         - Team
@@ -317,7 +415,23 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '400':
+          description: Team with this title already exists
+          content:
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not captain in this team)
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
   /team/{teamId}/user/{userId}:
     post:
       tags:
@@ -342,7 +456,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not captain in this team)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
     delete:
       tags:
         - Team
@@ -364,7 +490,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not captain in this team)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
   /team/{teamId}:
     delete:
       tags:
@@ -381,7 +519,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not captain in this team)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
   /admin/team/{teamId}:
     get:
       tags:
@@ -398,7 +548,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
     delete:
       tags:
         - Admin
@@ -414,7 +576,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: Team with this id doesn't exist
+          content:
+            application/json: { }
   /admin/cpt/{userId}:
     post:
       tags:
@@ -441,7 +615,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '400':
+          description: Team with this title already exists
+          content:
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
   /admin/team/{teamId}/user/{userId}:
     post:
       tags:
@@ -466,7 +652,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
     delete:
       tags:
         - Admin
@@ -488,7 +686,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
   /admin/user/{userId}:
     delete:
       tags:
@@ -505,7 +715,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: User with this id doesn't exist
+          content:
+            application/json: { }
   /admin/user:
     put:
       tags:
@@ -525,7 +747,19 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json: {}
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: User with this id doesn't exist
+          content:
+            application/json: { }
   /admin/team:
     put:
       tags:
@@ -550,9 +784,25 @@ paths:
                   - '18'
       responses:
         '200':
-          description: Successful response
+          description: Successful response or team has been deleted due to empty members
           content:
-            application/json: {}
+            application/json: { }
+        '400':
+          description: Captain isn't team member
+          content:
+            application/json: { }
+        '401':
+          description: Unauthorized(You can get it in 1 day after deleting your account)
+          content:
+            application/json: { }
+        '403':
+          description: You don't have enough access rights(You are not admin)
+          content:
+            application/json: { }
+        '404':
+          description: Team//user with this id doesn't exist
+          content:
+            application/json: { }
 components:
   securitySchemes:
     bearerAuth:
