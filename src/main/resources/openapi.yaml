@@ -152,7 +152,7 @@ paths:
     put:
       tags:
         - User
-      summary: name
+      summary: update
       requestBody:
         content:
           application/json:

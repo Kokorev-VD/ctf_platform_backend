@@ -103,7 +103,7 @@ class TeamMapper(
             code = code,
         ).apply {
             this.captain = userRepository.findUserByUserLoginParamsId(request.captainId.toLong()).orElseThrow { ResourceNotFoundException("user ${request.captainId}") }
-            this.members = request.members.map { userRepository.findUserByUserLoginParamsId(it.toLong()).orElseThrow { ResourceNotFoundException("user $it") } }.toSet()
+            this.members = request.members.map { userRepository.findUserByUserLoginParamsId(it.toLong()).orElseThrow { ResourceNotFoundException("user $it") } }.toMutableSet()
         }
     }
 
