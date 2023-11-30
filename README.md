@@ -1,6 +1,6 @@
 # CTF Platform Backend
 
-This is the backend component of the [CTF Platform](https://github.com/Kokorev-VD/ctf_platform_backend) project.
+This is the backend component of the [CTF Platform](https://github.com/Kokorev-VD/ctf_platform_backend) project. This project is a platform for CTF competitions. The competitions are held in a team format. Based on the competition, users and teams are awarded a rating depending on the results of participation. At the moment, the functionality of authorization and registration of users, viewing and changing information about them, as well as their removal is implemented. The CRUD functionality of commands is also implemented. In addition, the administrator functionality is implemented, which allows you to change and delete users and teams, as well as create commands for a specific user. All changes and deletions are available either to administrators or owners of objects (for example, a user can delete his profile, but cannot delete another user's profile, also with commands, a user can change or delete a team only if he is its captain)
 
 ## 🏗️ Architecture and Technologies
 
