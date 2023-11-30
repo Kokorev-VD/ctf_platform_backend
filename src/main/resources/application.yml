@@ -9,7 +9,7 @@ spring:
       access.lifetime: 1  # days
 
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5430}/${DB_NAME:CTF}?createIfNotExists=true
+    url: jdbc:postgresql://localhost:${DB_PORT:5430}/${DB_NAME:postgres}?createIfNotExists=true
     username: user
     password: password
 
