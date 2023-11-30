@@ -80,5 +80,3 @@ The project leverages several key libraries to ensure efficient development, mai
 
 - **Ktlint**: The Ktlint plugin analyzes the Kotlin codebase for code smells and potential issues. It helps maintain
   code quality and consistency throughout the project.
-
-These libraries collectively empower the project to deliver scalable, maintainable, 
